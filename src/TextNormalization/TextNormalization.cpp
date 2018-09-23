@@ -583,7 +583,7 @@ EXPORT int initTextNorm()
 				const char ** szArrPointer = NULL;
 				int szArrCount = 0;
 
-				if (strstr(buffer_temp, "AbbSeparateWord:") != NULL)
+				if (strstr(rules[rule], "AbbSeparateWord:") != NULL)
 				{
 					szArrCount = sizeof(abb) / sizeof(abb[0]);
 					szArrPointer = &abb[0];
@@ -600,20 +600,15 @@ EXPORT int initTextNorm()
 
 				if (szArrPointer != NULL && szArrCount > 0)
 				{			
+					abbSizes[currentFileBuffer] = 0;
+					
 					for (int j = 0; j < szArrCount; j++)
 					{
-
-						printf(skaitm[j]);
-						printf("\n");
 						char buff[255];
-						sscanf(skaitm[j], "%63[^@]@%255[^@]", buff, buff);
-	
-						printf("O\n");
-						sscanf(skaitm[j], "%63[^@]@%255[^@]", 
+						sscanf(szArrPointer[j], "%63[^@]@%255[^@]", 
 							abbLists[currentFileBuffer][abbSizes[currentFileBuffer]], 
 							abbListsSubstitutions[currentFileBuffer][abbSizes[currentFileBuffer]]);
 
-						printf("O\n");
 						if (abbLists[currentFileBuffer][abbSizes[currentFileBuffer]][strlen(abbLists[currentFileBuffer][abbSizes[currentFileBuffer]])-1] == '.')
 							abbListsIsWithSep[currentFileBuffer][abbSizes[currentFileBuffer]] = 1;
 						else
