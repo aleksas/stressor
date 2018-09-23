@@ -18,6 +18,14 @@
             "request": "attach",
             "port": 5678,
             "host": "localhost"
+        },      
+        { 
+            "name": "GDB Attach proc 0",
+            "type": "cppdbg",
+            "request": "attach",
+            "program": "/usr/bin/python3",
+            "processId": "${command:pickProcess}",
+            "MIMode": "gdb"
         },
         {
             "name": "Python: Django",

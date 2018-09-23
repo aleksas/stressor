@@ -34,7 +34,7 @@ SkDu 1-skardus,2-duslus,3-betkoks.
 SkPb 1-kitur,2-einam,4-1ikair.
 */
 
-int initTranscrLUSS()
+EXPORT int initTranscrLUSS()
 {
 	int j, n;
 	char laik[200];

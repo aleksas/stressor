@@ -547,7 +547,7 @@ int expandDate(int yearNumber, int monthNumber, int dayNumber, int mode, char re
 	return 0;
 }
 
-EXPORT int initTextNorm() 
+EXPORT int initTextNorm()
 {
 	char buffer_temp[1024];	
 
@@ -592,19 +592,33 @@ EXPORT int initTextNorm()
 				{
 					szArrCount = sizeof(skaitm) / sizeof(skaitm[0]);
 					szArrPointer = &skaitm[0];
+				} else {
+
+					szArrPointer = NULL;
+					szArrCount = 0;
 				}
 
 				if (szArrPointer != NULL && szArrCount > 0)
 				{			
 					for (int j = 0; j < szArrCount; j++)
 					{
+
+						printf(skaitm[j]);
+						printf("\n");
+						char buff[255];
+						sscanf(skaitm[j], "%63[^@]@%255[^@]", buff, buff);
+	
+						printf("O\n");
 						sscanf(skaitm[j], "%63[^@]@%255[^@]", 
 							abbLists[currentFileBuffer][abbSizes[currentFileBuffer]], 
 							abbListsSubstitutions[currentFileBuffer][abbSizes[currentFileBuffer]]);
+
+						printf("O\n");
 						if (abbLists[currentFileBuffer][abbSizes[currentFileBuffer]][strlen(abbLists[currentFileBuffer][abbSizes[currentFileBuffer]])-1] == '.')
 							abbListsIsWithSep[currentFileBuffer][abbSizes[currentFileBuffer]] = 1;
 						else
 							abbListsIsWithSep[currentFileBuffer][abbSizes[currentFileBuffer]] = 0;
+							
 						abbSizes[currentFileBuffer]++;
 					}
 					currentFileBuffer++;
@@ -613,7 +627,7 @@ EXPORT int initTextNorm()
 		}		
 	}
 
-	return NO_ERR;
+	return 0;
 }
 
 int applyPhrasesFilter(stringWithLetterPosition * bufferString)

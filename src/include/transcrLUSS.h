@@ -19,7 +19,7 @@ int KircTranskr(char* eil, char* TrZodis, int TrEilIlg, unsigned short* unitsR, 
 				int* unitsLet, int* letPos, int rules2use);
 int KircTransrAlt(char* eil, int* unitsLet, int rules2use);
 				
-int initTranscrLUSS();
+EXPORT int initTranscrLUSS();
 
 int synthesizeWholeTextAlt(char *tekstas);
 
