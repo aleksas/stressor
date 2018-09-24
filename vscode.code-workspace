@@ -1,16 +1,16 @@
 {
 	"folders": [
 		{
-			"path": "src/transcrLUSS"
+			"path": "native/transcrLUSS"
 		},
 		{
-			"path": "src/TextNormalization"
+			"path": "native/TextNormalization"
 		},
 		{
-			"path": "src/test"
+			"path": "native/test"
 		},
 		{
-			"path": "py"
+			"path": "sandara"
 		}
 	],
 	"launch": {
