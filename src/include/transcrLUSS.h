@@ -17,11 +17,11 @@ extern "C" {
 
 int KircTranskr(char* eil, char* TrZodis, int TrEilIlg, unsigned short* unitsR,  unsigned short* unitsRNextSep, 
 				int* unitsLet, int* letPos, int rules2use);
-int KircTransrAlt(char* eil, int* unitsLet, int rules2use);
+int KircTranskrAlt(char *eil, int *letPos, int rules2use, char * stringBuffer, char * stressBuffer, int bufferSize);
 				
 EXPORT int initTranscrLUSS();
 
-int synthesizeWholeTextAlt(char *tekstas);
+EXPORT int synthesizeWholeTextAlt(char *tekstas, char * stringBuffer, char * stressBuffer, int bufferSize);
 
 }
 

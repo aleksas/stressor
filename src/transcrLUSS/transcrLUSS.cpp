@@ -378,16 +378,27 @@ int KircTranskr(char *eil, char *TrZodis, int TrEilIlg, unsigned short *unitsR, 
 
 #define TEXTBUFSIZE 10000
 
+int GetMinBufferSize()
+{
+	return ILGIS1;
+}
+
 
 //------------------------------------------------------------
-int KircTranskrAlt(char *eil, int *letPos, int rules2use)
+int KircTranskrAlt(char *eil, int *letPos, int rules2use, char * stringBuffer, char * stressBuffer, int bufferSize)
 {
-	char SkPb[ILGIS1], Kirt[ILGIS1], Trmp[ILGIS1], eilute[ILGIS1];
+	char SkPb[ILGIS1], Trmp[ILGIS1];
+	
 	int i, j;
 
 	int letPos1[ILGIS1];
 
 	char frazesPab = FrazesPabaiga(eil);
+
+	if (bufferSize < ILGIS1) return -1;
+
+	char * eilute = stringBuffer;
+	char * Kirt = stressBuffer;
 
 	// skiemenu pabaigu ir kircio pozymiu uzpildymas
 	for (i = 0; i < ILGIS1 - 1; i++)
@@ -562,7 +573,7 @@ int KircTranskrAlt(char *eil, int *letPos, int rules2use)
 
 
 ////////////Pagrindine sintezavimo funkcija////////////////////////////////////////////////////////////////////////////////
-int synthesizeWholeTextAlt(char *tekstas)
+EXPORT int synthesizeWholeTextAlt(char *tekstas, char * stringBuffer, char * stressBuffer, int bufferSize)
 {
 	int bufsize = TEXTBUFSIZE;
 	char *normtextbuf = NULL;
@@ -651,7 +662,7 @@ int synthesizeWholeTextAlt(char *tekstas)
 			if (strcmp(sakinys, " ") == 0)
 				sakinys[0] = 0; //jei eilute tuscia arba tik neskaitytini simboliai
 
-			int unitsRowsLength = KircTranskrAlt(sakinys, &letPos[lp], rules2use);
+			int unitsRowsLength = KircTranskrAlt(sakinys, &letPos[lp], rules2use, stringBuffer, stressBuffer, bufferSize);
 			hr2 = (unitsRowsLength <= 2);
 
 			//cia galim modifikuoti TrSakinys
