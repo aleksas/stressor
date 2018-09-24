@@ -9,7 +9,7 @@
             "command": "mkdir",
             "args": [
                 "-p",
-                "../../bin/Linux_x86/"
+                "../../sandara/Linux_x86_64/"
             ]
         },
         {
@@ -19,13 +19,12 @@
             "command": "g++",
             "args": [
                 "-fPIC", "-g", "Transkr.cpp", "transcrLUSS.cpp",
-                "Skiemen.cpp",
+                "Skiemen.cpp", 
                 "Kircdb.cpp", "fv2id.cpp",
                 "ArKirciuoti.cpp",
                 "strtokf.cpp",
-                "-L../../bin/Linux_x86/",
-                "-lTextNormalization",
-                "-shared", "-o", "../../bin/Linux_x86/libtranscrLUSS.so",
+                "stringWithLetterPosition.cpp", "TextNormalization.cpp",
+                "-shared", "-o", "../../sandara/Linux_x86_64/libtranscrLUSS.so",
                 "-Wno-write-strings"
             ],
             "group": {

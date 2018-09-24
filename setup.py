@@ -6,59 +6,49 @@ import sys
 try:
     from os import path
     from setuptools import setup, find_packages
+    from setuptools.dist import Distribution
 except ImportError:
     from distutils.core import setup
 
-from src.py.version import VERSION
+from sandara.version import VERSION
 __version__ = VERSION
 
-# here = path.abspath(path.dirname(__file__))
-
-# # get the dependencies and installs
-# if sys.version_info[:2] <= (2, 7):
-#     with open(path.join(here, 'requirements.txt')) as f:
-#         all_reqs = f.read().split('\n')
-# else:
-#     with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
-#         all_reqs = f.read().split('\n')
-
-# install_requires = [x.strip() for x in all_reqs if 'git+' not in x]
-# dependency_links = [x.strip().replace('git+', '') for x in all_reqs if 'git+' not in x]
 
 try:
     if sys.version_info[:2] <= (2, 7):
-        readme = open("README.rst")
+        readme = open("README.md")
     else:
-        readme = open("README.rst", encoding="utf8")
+        readme = open("README.md", encoding="utf8")
     long_description = str(readme.read())
 finally:
     readme.close()
 
+class BinaryDistribution(Distribution):
+    def has_ext_modules(foo):
+        return True
+
 setup(
-    name='Vocabulary',
-    author='Tasdik Rahman',
+    name='sandara',
+    author='Aleksas Pielikis',
     version=VERSION,
-    author_email='tasdik95@gmail.com',
-    description="Module to get meaning, synonym, antonym, part_of_speech, usage_example, pronunciation and hyphenation for a given word",
+    author_email='ant.kampo@gmail.com',
+    description="Module to get pronunciation and hyphenation for words in a given sentence in Lithuanian language",
     long_description=long_description,
-    url='https://github.com/tasdikrahman/vocabulary',
-    license='MIT',
-    install_requires=[
-        "requests==2.13.0",
-        "mock==2.0.0"
-    ],
-    #dependency_links=dependency_links,
-    # adding package data to it
+    url='https://github.com/aleksas/sandara',
+    license='BSD',
     packages=find_packages(exclude=['contrib', 'docs']),
-    download_url='https://github.com/tasdikrahman/vocabulary/tarball/' + __version__,
     classifiers=[
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
     ],
-    keywords=['Dictionary', 'Vocabulary', 'simple dictionary', 'pydict', 'dictionary module']
+    keywords=['sandara', 'pronunciation', 'shyphenation'],
+    package_data={
+        'sandara': ['Linux_x86_64/libtranscrLUSS.so', 'Linux_x86_64/libTextNormalization.so'],
+    },
+    distclass=BinaryDistribution
 )
