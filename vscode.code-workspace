@@ -4,9 +4,6 @@
 			"path": "native/transcrLUSS"
 		},
 		{
-			"path": "native/TextNormalization"
-		},
-		{
 			"path": "native/test"
 		},
 		{

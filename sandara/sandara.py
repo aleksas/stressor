@@ -2,8 +2,30 @@
 
 from ctypes import CDLL, c_int, c_char_p, create_string_buffer, byref
 from os.path import join, dirname, abspath
+from platform import uname, architecture
 
-lib_path = join(dirname(__file__), "Linux_x86_64", "libtranscrLUSS.so")
+print (uname())
+print (architecture())
+
+folder = ''
+prefix = ''
+if uname()[0] == "Windows":
+    if architecture()[0] == '64bit':
+        folder = 'Windows_x64'
+    if architecture()[0] == '32bit':
+        folder = 'Windows_x86'
+    lib_ext = ".dll"
+if uname()[0] == "Linux":
+    if architecture()[0] == '64bit':
+        folder = 'Linux_x86_64'
+    if architecture()[0] == '32bit':
+        folder = 'Linux_x86'
+    lib_ext = ".so"
+    prefix = 'lib'
+else:
+    raise Exception("Native lib not present for platform %s" % uname()[0])
+
+lib_path = join(dirname(__file__), folder, prefix + "transcrLUSS" + lib_ext)
 libtranscrLUSS = CDLL(lib_path)
 
 initTranscrLUSS = libtranscrLUSS.initTranscrLUSS
@@ -45,4 +67,3 @@ class Sandara:
         stressed = ''.join([a + str(s) if s > 1 else a for a,s in zip(sentence, stresses)]).strip()
 
         return stressed
-        

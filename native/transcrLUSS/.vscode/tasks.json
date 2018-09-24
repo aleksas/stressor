@@ -4,7 +4,16 @@
     "version": "2.0.0",
     "tasks": [ 
         {
-            "label": "create output dir",
+            "label": "create output dir x86",
+            "type": "shell",
+            "command": "mkdir",
+            "args": [
+                "-p",
+                "../../sandara/Linux_x86/"
+            ]
+        },
+        {
+            "label": "create output dir x86_64",
             "type": "shell",
             "command": "mkdir",
             "args": [
@@ -13,8 +22,31 @@
             ]
         },
         {
-            "label": "build transcrLUSS",
-            "identifier": "build transcrLUSS",
+            "label": "build transcrLUSS x86",
+            "identifier": "build transcrLUSS x86",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-fPIC", "-m32", "-g", "Transkr.cpp", "transcrLUSS.cpp",
+                "Skiemen.cpp", 
+                "Kircdb.cpp", "fv2id.cpp",
+                "ArKirciuoti.cpp",
+                "strtokf.cpp",
+                "stringWithLetterPosition.cpp", "TextNormalization.cpp",
+                "-shared", "-o", "../../sandara/Linux_x86/libtranscrLUSS.so",
+                "-Wno-write-strings"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "create output dir x86"
+            ]
+        },
+        {
+            "label": "build transcrLUSS x86_64",
+            "identifier": "build transcrLUSS x86_64",
             "type": "shell",
             "command": "g++",
             "args": [
@@ -32,7 +64,7 @@
                 "isDefault": true
             },
             "dependsOn": [
-                "create output dir"
+                "create output dir x86_64"
             ]
         }
     ]

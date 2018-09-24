@@ -13,7 +13,6 @@ except ImportError:
 from sandara.version import VERSION
 __version__ = VERSION
 
-
 try:
     if sys.version_info[:2] <= (2, 7):
         readme = open("README.md")
@@ -48,7 +47,11 @@ setup(
     ],
     keywords=['sandara', 'pronunciation', 'shyphenation'],
     package_data={
-        'sandara': ['Linux_x86_64/libtranscrLUSS.so', 'Linux_x86_64/libTextNormalization.so'],
+        'sandara': [
+            'Linux_x86_64/libtranscrLUSS.so',
+            'Linux_x86/libtranscrLUSS.so',
+            'Windows_x86/transcrLUSS.dll',
+            'Windows_x64/transcrLUSS.dll'],
     },
     distclass=BinaryDistribution
 )
