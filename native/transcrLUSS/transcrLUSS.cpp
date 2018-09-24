@@ -400,6 +400,8 @@ int KircTranskrAlt(char *eil, int *letPos, int rules2use, char * stringBuffer, c
 	char * eilute = stringBuffer;
 	char * Kirt = stressBuffer;
 
+	memset(eilute, 0, bufferSize);
+
 	// skiemenu pabaigu ir kircio pozymiu uzpildymas
 	for (i = 0; i < ILGIS1 - 1; i++)
 	{

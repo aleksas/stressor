@@ -4,9 +4,6 @@ from ctypes import CDLL, c_int, c_char_p, create_string_buffer, byref
 from os.path import join, dirname, abspath
 from platform import uname, architecture
 
-print (uname())
-print (architecture())
-
 folder = ''
 prefix = ''
 if uname()[0] == "Windows":
@@ -67,3 +64,4 @@ class Sandara:
         stressed = ''.join([a + str(s) if s > 1 else a for a,s in zip(sentence, stresses)]).strip()
 
         return stressed
+
