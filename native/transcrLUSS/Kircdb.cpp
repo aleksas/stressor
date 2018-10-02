@@ -11,7 +11,7 @@
 
 extern "C" {
 
-#include "Kircdb.h"
+#include "../include/Kircdb.h"
 #include "Vb9r1_13.h"
 #include "db8r1_14.h"
 #include "nb12.h"

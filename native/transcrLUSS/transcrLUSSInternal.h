@@ -1,7 +1,7 @@
 #ifndef TRANSCR_LUSS_INTERNAL
 #define TRANSCR_LUSS_INTERNAL
 
-#include "Kircdb.h"
+#include "../include/Kircdb.h"
 #include "Transkr.h"
 #include "Skiemen.h"
 #include "ArKirciuoti.h"
@@ -12,11 +12,27 @@
 #define VARSK1 10  //transkribavimo variantu skaicius
 #define ZODIL1 50  //maksimalus kirciuojamo zodzio ilgis
 
+extern "C" {
+
+typedef struct _WordStressOptions {
+	int stressOptionCount;
+	int selectedStressOptionIndex;
+    char szWord[MAX_WORD_LENTH];
+	variantas * pStressOptions;
+} WordStressOptions;
+
+typedef struct WMEngineOutput_ {
+    int wordCount;
+    WordStressOptions * pArOutputWords;
+    } WMEngineOutput;
+
+#define GetObjectPtr(objectType, objectHandle) ((objectType*) objectHandle)
+
 void TarptautF(char *ez, char *Trmp, char Tarpt);
 int VienasVarKirc1(variantas *Variant, int variantsk);
 char FrazesPabaiga(char *zod);
 int auto_rules_function(variantas *variants_array, int varsk, int rules2use);
-int KircTranskr(char *eil, char *TrZodis, int TrEilIlg, unsigned short *unitsR, unsigned short *unitsRNextSep,
-				int *unitsLet, int *letPos, int rules2use);
+
+}
 
 #endif

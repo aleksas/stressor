@@ -9,7 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 
-extern "C" {
 	
 #include "../include/transcrLUSS.h"
 #include "../include/LithUSS_Error.h"
@@ -17,6 +16,8 @@ extern "C" {
 #include "../include/strtokf.h"
 #include "transcrLUSSInternal.h"
 
+extern "C" {
+	
 //-------------------------------------------------------------------
 void TarptautF(char *ez, char *Trmp, char Tarpt)
 {
@@ -198,183 +199,6 @@ int auto_rules_function(variantas *variants_array, int varsk, int rules2use)
 	else
 		return new_varsk;
 }
-//------------------------------------------------------------
-int KircTranskr(char *eil, char *TrZodis, int TrEilIlg, unsigned short *unitsR, unsigned short *unitsRNextSep,
-				int *unitsLet, int *letPos, int rules2use)
-{
-	char SkPb[ILGIS1], Kirt[ILGIS1], Trmp[ILGIS1], eilute[ILGIS1];
-	int i, j;
-
-	int letPos1[ILGIS1];
-
-	char frazesPab = FrazesPabaiga(eil);
-
-	// skiemenu pabaigu ir kircio pozymiu uzpildymas
-	for (i = 0; i < ILGIS1 - 1; i++)
-	{
-		SkPb[i] = 1;
-		Kirt[i] = -1;
-		Trmp[i] = 0;
-	}
-
-	// kircio zenklu, zodziu pabaigu kodavimas, XWQ keitimas
-	eilute[0] = '_';
-	//ismetam visus pradzioje esancius simbolius
-	i = 0;
-	while (strchr("`^~- ", eil[i]) && (eil[i] != 0) && (i < ILGIS1))
-		i++;
-	j = 1;
-	while ((eil[i] != 0) && (i < ILGIS1))
-	{
-		switch (eil[i])
-		{
-		case 'W':
-			eilute[j] = 'V';
-			break;
-		case 'Q':
-			eilute[j] = 'K';
-			break;
-		case 'X':
-			eilute[j] = 'K';
-			letPos1[j - 1] = letPos[i];
-			eilute[++j] = 'S';
-			break;
-		case '`':
-			j--;
-			Kirt[j] = 0;
-			Trmp[j] = 1;
-			break;
-		case '^':
-			j--;
-			Kirt[j] = 1;
-			Trmp[j] = 0;
-			break;
-		case '~':
-			j--;
-			Kirt[j] = 2;
-			Trmp[j] = 0;
-			break;
-		case '-':
-			j--;
-			if (SkPb[j] & 1)
-				SkPb[j]++;
-			break;
-		case ' ':
-			eilute[j] = ' ';
-			while (strchr(" ", eil[i + 1]) && (eil[i + 1] != 0) && (i < ILGIS1))
-				i++;
-			SkPb[j - 1] += 8;
-			break; //8 reiskia zodzio pabaiga
-		default:
-			eilute[j] = eil[i];
-		}
-		letPos1[j - 1] = letPos[i];
-		i++;
-		if (j < ILGIS1)
-			j++;
-	}
-
-	while (eilute[j - 1] == ' ')
-		j--;
-	eilute[j] = 0;
-	letPos1[j - 1] = letPos[i];
-	SkPb[j] = 0;
-
-	// skiemenavimas
-	skiem(eilute, SkPb);
-
-	// kirciavimas ir transkribavimas
-	variantas Variant[VARSK1];
-	int m, varsk;
-	int Kirciuota;
-	char *kz, *ez, *dz, *newpos;
-
-	// kirciavimas ir nekirciuojamu zodziu paieska
-	ez = "_";
-	dz = strtokf(&eilute[1], " ", &newpos);
-	if (dz != NULL)
-		do
-		{
-			kz = ez;
-			ez = dz;
-			dz = strtokf(NULL, " ", &newpos);
-			if (dz == NULL)
-				dz = "_";
-
-			Kirciuota = 0;
-			j = ez - eilute;
-			for (int ij = j + strlen(&eilute[j]) - 1; ij >= j; ij--)
-			{
-				if (Kirt[ij] != -1)
-				{
-					if (Kirciuota == 0)
-					{
-						Kirciuota = 1;
-					}
-					else
-					{
-						Kirt[ij] = -1;
-					} //paliekam tik viena kircio zenkla zodyje
-				}
-			}
-
-			if (Kirciuota == 0)
-			{
-				m = ArKirciuoti(kz, ez, dz);
-				if ((m == 1) && (strlen(ez) < ZODIL1)) // bandom kirciuoti tik zodzius, trumpesnius uz 50 simb.
-				{
-					m = Kirciuoti(ez, &SkPb[ez - eilute - 1], Variant);
-					if (m > VARSK1 - 1)
-						m = VARSK1 - 1;
-					varsk = VienasVarKirc1(Variant, m);
-
-					if (varsk > 1)
-						varsk = auto_rules_function(Variant, varsk, rules2use);
-
-					//Jei keli variantai, tai atsitiktinai parenkam tik tuo atveju, jei naudojamos visos taisykles
-					if ((varsk == 1) || ((varsk > 1) && (rules2use == total_auto_rules)))
-					{
-						i = 0;
-						while ((i < varsk) && (Variant[i].Zodynas == 0))
-							i++; //grazinam daiktavardi, o ne veiksmazodi
-						if (i == varsk)
-							i = 0;
-
-						Kirt[ez - eilute - 1 + Variant[i].KirtRaide] = Variant[i].Priegaide;
-						strncpy(&SkPb[ez - eilute - 1], Variant[i].Skiem, strlen(ez));
-						TarptautF(ez, &Trmp[ez - eilute], Variant[i].Tarpt);
-					}
-					else
-						TarptautF(ez, &Trmp[ez - eilute], 0);
-				}
-			}
-		} while (dz[0] != '_');
-
-	// Skiemenu pozymiu nustatymas
-	j = strlen(SkPb);
-	for (i = j - 2; i >= 0; i--)
-		if (SkPb[i] & 2)
-			if (SkPb[i + 1] & 2)
-				SkPb[i + 1] += 4;
-			else
-				SkPb[i + 1] += 3;
-
-	// Kircio pozymiu nustatymas
-	//Kirt 1-nek,2-tr,4-des,8-gal,16-kirtis 1 s i des .
-	for (i = 1; i < j; i++)
-	{
-		if (Kirt[i] == 2)
-			Kirt[i - 1] = 16;
-		Kirt[i] = (Kirt[i] == -1) ? 1 : (Kirt[i] == 0) ? 2 : (Kirt[i] == 1) ? 4 : 8;
-	}
-
-	if (eilute[1] == ' ')
-		eilute[1] = 0;
-
-	return transkr(eilute, Kirt, SkPb, Trmp, TrZodis, TrEilIlg, unitsR, unitsRNextSep, unitsLet, letPos1);
-}
-
-
 
 #define TEXTBUFSIZE 10000
 
@@ -383,15 +207,17 @@ int GetMinBufferSize()
 	return ILGIS1;
 }
 
-
 //------------------------------------------------------------
-int KircTranskrAlt(char *eil, int *letPos, int rules2use, char * stringBuffer, char * stressBuffer, int bufferSize)
+int KircTranskrAlt(char *eil, int *letPos, int rules2use, char * stringBuffer, char * stressBuffer, int bufferSize, WordStressOptions ** ppWordStressOptions, int * pWordStressOptionCount)
 {
 	char SkPb[ILGIS1], Trmp[ILGIS1];
 	
 	int i, j;
 
 	int letPos1[ILGIS1];
+
+	WordStressOptions wordStressOptions[200];
+	int wordStressOptionCount = 0;
 
 	char frazesPab = FrazesPabaiga(eil);
 
@@ -524,6 +350,19 @@ int KircTranskrAlt(char *eil, int *letPos, int rules2use, char * stringBuffer, c
 					if (varsk > 1)
 						varsk = auto_rules_function(Variant, varsk, rules2use);
 
+					variantas * pStressOptions = (variantas *) malloc(sizeof(variantas) * varsk);
+					if (!pStressOptions) return -1;
+
+					memcpy(pStressOptions, Variant, sizeof(variantas) * varsk);
+
+					memset(wordStressOptions[wordStressOptionCount].szWord, 0, MAX_WORD_LENTH);
+					strcpy(wordStressOptions[wordStressOptionCount].szWord, ez);
+					wordStressOptions[wordStressOptionCount].pStressOptions = pStressOptions;
+					wordStressOptions[wordStressOptionCount].stressOptionCount = varsk;
+
+					wordStressOptions[wordStressOptionCount].selectedStressOptionIndex = 0;
+
+
 					//Jei keli variantai, tai atsitiktinai parenkam tik tuo atveju, jei naudojamos visos taisykles
 					if ((varsk == 1) || ((varsk > 1) && (rules2use == total_auto_rules)))
 					{
@@ -532,6 +371,8 @@ int KircTranskrAlt(char *eil, int *letPos, int rules2use, char * stringBuffer, c
 							i++; //grazinam daiktavardi, o ne veiksmazodi
 						if (i == varsk)
 							i = 0;
+					
+						wordStressOptions[wordStressOptionCount].selectedStressOptionIndex = i;
 
 						Kirt[ez - eilute - 1 + Variant[i].KirtRaide] = Variant[i].Priegaide;
 						strncpy(&SkPb[ez - eilute - 1], Variant[i].Skiem, strlen(ez));
@@ -539,6 +380,8 @@ int KircTranskrAlt(char *eil, int *letPos, int rules2use, char * stringBuffer, c
 					}
 					else
 						TarptautF(ez, &Trmp[ez - eilute], 0);
+
+					wordStressOptionCount++;
 				}
 			}
 		} while (dz[0] != '_');
@@ -564,28 +407,29 @@ int KircTranskrAlt(char *eil, int *letPos, int rules2use, char * stringBuffer, c
 	if (eilute[1] == ' ')
 		eilute[1] = 0;
 
-	char a = eilute[0];
-	char k = Kirt[0];
-	char s = SkPb[0];
-	char t = Trmp[0];
-	int l = letPos1[0];
+	WordStressOptions * pWordStressOptions = (WordStressOptions *) malloc(sizeof(WordStressOptions) * wordStressOptionCount);
+	if (!pWordStressOptions) return -1;
+	memcpy(pWordStressOptions, wordStressOptions, sizeof(WordStressOptions) * wordStressOptionCount);
+
+	*ppWordStressOptions = pWordStressOptions;
+	*pWordStressOptionCount = wordStressOptionCount;
 
 	return 0;
 }
 
-
-////////////Pagrindine sintezavimo funkcija////////////////////////////////////////////////////////////////////////////////
-EXPORT int synthesizeWholeTextAlt(char *tekstas, char * stringBuffer, char * stressBuffer, int bufferSize)
+int normalize(char * szText, char ** pszNormalizedTextBuffer, int ** ppLetterPositionMap, int * pBufferSize)
 {
+
 	int bufsize = TEXTBUFSIZE;
 	char *normtextbuf = NULL;
 	int *letPos = NULL;
-	int lll = strlen(tekstas) + 1;
+	int lll = strlen(szText) + 1;
 	if (bufsize < lll)
 		bufsize = lll + 1;
-	unsigned int ib = 0;
-	int evnr = 0;
 	int hr = NO_ERR;
+
+	if (szText == NULL || ppLetterPositionMap == NULL || pBufferSize == NULL) 
+		return -1;
 	
 	if (hr == NO_ERR)
 	{
@@ -605,6 +449,8 @@ EXPORT int synthesizeWholeTextAlt(char *tekstas, char * stringBuffer, char * str
 		}
 	}
 
+	// Try allocating normalized text buffer at most 5 times,
+	// doubling normalized buffer size each time 
 	if (hr == NO_ERR)
 	{
 		int retval = -1;
@@ -615,7 +461,7 @@ EXPORT int synthesizeWholeTextAlt(char *tekstas, char * stringBuffer, char * str
 				letPos[jj] = jj;
 			letPos[lll] = 0;
 
-			retval = normalizeText(tekstas, normtextbuf, bufsize, letPos);
+			retval = normalizeText(szText, normtextbuf, bufsize, letPos);
 			if (retval != NO_ERR)
 			{
 				bufsize = bufsize * 2;
@@ -633,16 +479,44 @@ EXPORT int synthesizeWholeTextAlt(char *tekstas, char * stringBuffer, char * str
 			hr = retval;
 	}
 
+	*pszNormalizedTextBuffer = normtextbuf;
+	*ppLetterPositionMap = letPos;
+	*pBufferSize = bufsize;
+	
+	return hr;
+}
+
+////////////Pagrindine sintezavimo funkcija////////////////////////////////////////////////////////////////////////////////
+EXPORT Result synthesizeWholeTextAlt(char *tekstas, bool normalizeText, WMEngineOutputHandle * pHandle)
+{
+	int bufsize = TEXTBUFSIZE;
+	char *normtextbuf = NULL;
+	int *letPos = NULL;
+	int hr = NO_ERR;
+
+	char stringBuffer[1024];
+	char stressBuffer[1024];	
+	int bufferSize = 1024;
+
+	WMEngineOutput * pOutput = (WMEngineOutput*) calloc(1, sizeof(WMEngineOutput));
+	
+	if (!pOutput)
+		hr = -1;
+
+	if (hr == NO_ERR && normalizeText)
+		hr = normalize(tekstas, &normtextbuf, &letPos, &bufsize);
+		tekstas = normtextbuf;
+	
 	if (hr == NO_ERR)
 	{
-		char *pos = normtextbuf;
-		char sakinys[200], TrSakinys[500];
+		char *pos = tekstas;
+		char sakinys[200];
 		int n;
 
 		while ((pos != (void*)1) && (hr == NO_ERR))
 		{
 			int hr2 = 0;
-			int lp = (int)(pos - normtextbuf);
+			int lp = (int)(pos - tekstas);
 			n = sscanf(pos, "%[^\n]", sakinys);
 			pos = strchr(pos, '\n') + 1;
 			if (n < 0)
@@ -650,21 +524,17 @@ EXPORT int synthesizeWholeTextAlt(char *tekstas, char * stringBuffer, char * str
 			if (n == 0)
 				sakinys[0] = 0; //arba if(n == 0) continue; apsauga nuo tusciu eiluciu \n
 
-			unsigned short unitsRows[128];
-			unsigned short unitsRowsNextSeparators[128];
-			int unitsLet[128];
-			for (int ii = 0; ii < 128; ii++)
-			{
-				unitsRows[ii] = 0;
-				unitsRowsNextSeparators[ii] = 0;
-				unitsLet[ii] = 0;
-			}
-
 			int rules2use = 1155 * 75 / 100; //75% total_auto_rules
 			if (strcmp(sakinys, " ") == 0)
 				sakinys[0] = 0; //jei eilute tuscia arba tik neskaitytini simboliai
 
-			int unitsRowsLength = KircTranskrAlt(sakinys, &letPos[lp], rules2use, stringBuffer, stressBuffer, bufferSize);
+			if (pOutput->pArOutputWords != NULL)
+			{
+				hr = ERROR_LITHUSS_EVENTS_ARRAY_OVERFLOW;
+				break;
+			}
+			
+			int unitsRowsLength = KircTranskrAlt(sakinys, &letPos[lp], rules2use, stringBuffer, stressBuffer, bufferSize, &pOutput->pArOutputWords, &pOutput->wordCount);
 			hr2 = (unitsRowsLength <= 2);
 
 			//cia galim modifikuoti TrSakinys
@@ -683,7 +553,105 @@ EXPORT int synthesizeWholeTextAlt(char *tekstas, char * stringBuffer, char * str
 		letPos = NULL;
 	}
 
+	if (normtextbuf != NULL)
+	{
+		free(normtextbuf);
+		normtextbuf = NULL;
+	}
+
+	*pHandle = pOutput;
+
 	return hr;
+}
+
+EXPORT Result WMEngineOutputFree(WMEngineOutputHandle * pHandle)
+{
+	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, *pHandle);
+
+	for (int i = 0; i < pOutput->wordCount; i++)
+	{
+		free(pOutput->pArOutputWords[i].pStressOptions);
+	}
+	free(pOutput->pArOutputWords);
+	free(pOutput);
+	*pHandle = NULL;
+}
+
+
+EXPORT Result WMEngineOutputGetWordCount(WMEngineOutputHandle hOutput, int * pValue)
+{
+	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, hOutput);
+
+	if (!pValue) return -1;
+
+	*pValue = pOutput->wordCount;
+
+	return 0;
+}
+
+EXPORT Result WMEngineOutputGetWord(WMEngineOutputHandle hOutput, int wordIndex, char ** pszValue)
+{
+	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, hOutput);
+
+	if (!pszValue) return -1;
+	if (wordIndex >= pOutput->wordCount) return -2;
+
+	*pszValue = pOutput->pArOutputWords[wordIndex].szWord;
+
+	return 0;
+}
+
+EXPORT Result WMEngineOutputGetWordSyllables(WMEngineOutputHandle hOutput, int wordIndex, char ** pszValue)
+{
+	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, hOutput);
+
+	if (!pszValue) return -1;
+	if (wordIndex >= pOutput->wordCount) return -2;
+
+	*pszValue = pOutput->pArOutputWords[wordIndex].pStressOptions->Skiem;
+
+	return 0;
+}
+
+EXPORT Result WMEngineOutputGetWordStressOptionCount(WMEngineOutputHandle hOutput, int wordIndex, int * pValue)
+{
+	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, hOutput);
+
+	if (!pValue) return -1;
+
+	if (wordIndex >= pOutput->wordCount) return -2;
+
+	*pValue = pOutput->pArOutputWords[wordIndex].stressOptionCount;
+
+	return 0;
+}
+
+EXPORT Result WMEngineOutputGetWordStressOptionSelected(WMEngineOutputHandle hOutput, int wordIndex, int * pValue)
+{
+	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, hOutput);
+
+	if (!pValue) return -1;
+	if (wordIndex >= pOutput->wordCount) return -2;
+
+	*pValue = pOutput->pArOutputWords[wordIndex].selectedStressOptionIndex;
+
+	return 0;
+}
+
+EXPORT Result WMEngineOutputGetWordStressOption(WMEngineOutputHandle hOutput, int wordIndex, int optionIndex, int * pLetterIndex, int * pStressType, int * pGrammarRule)
+{
+	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, hOutput);
+
+	if (!pLetterIndex) return -1;
+	if (!pStressType) return -2;
+	if (wordIndex >= pOutput->wordCount) return -3;
+	if (optionIndex >= pOutput->pArOutputWords[wordIndex].stressOptionCount) return -4;
+
+	*pLetterIndex = pOutput->pArOutputWords[wordIndex].pStressOptions[optionIndex].KirtRaide - 1;
+	*pStressType = pOutput->pArOutputWords[wordIndex].pStressOptions[optionIndex].Priegaide;
+	*pGrammarRule = pOutput->pArOutputWords[wordIndex].pStressOptions[optionIndex].GramForma;
+
+	return 0;
 }
 
 }

@@ -31,25 +31,9 @@ void spausdinti_loga(const char *pranesimas)
 typedef struct SynthData
 {
 	char *text;
-	short *largebf;
-	unsigned int *largebfsize;
 	int *evsz;
-	int greitis;
-	int tonas;
 } SYNTHDATA, *PSYNTHDATA;
 
-int TextToSound(void *lpParam)
-{
-	PSYNTHDATA pData = (PSYNTHDATA)lpParam;
-	if (pData == NULL)
-		return 7;
-	if (pData->largebf == NULL)
-		return 8;
-	if (pData->evsz == NULL)
-		return 9;
-	int hr = -synthesizeWholeTextAlt(pData->text);
-	return hr;
-}
 
 int main(int argc, char *argv[])
 {
@@ -97,15 +81,12 @@ int main(int argc, char *argv[])
 	}
 
 	int evsize[MAX_PASTR_SK];
-	unsigned int largebufsize[MAX_PASTR_SK];
 	PSYNTHDATA pDataArray[MAX_PASTR_SK];
 
 	//sintezavimas pastraipomis
 	//struct event {short Id; short phonviz; int charOffset; long signOffset;};
 
 	int k;
-	int greitis = 100;
-	int tonas = 100;
 
 	if (hr == 0)
 	{
@@ -120,32 +101,48 @@ int main(int argc, char *argv[])
 				if (eillen < PAGE_SIZE)
 					eillen = PAGE_SIZE;
 
-				if (greitis >= 100)
-				{
-					largebufsize[k] = eillen * 1250 * greitis / 100;
-				}
-				else //greitis < 100)
-				{
-					largebufsize[k] = eillen * 1250 * greitis / 150;
-				}
-				pDataArray[k]->largebfsize = &largebufsize[k];
-				pDataArray[k]->largebf = (short *)calloc(largebufsize[k], sizeof(short)); //butina uznulinti, todel calloc
-
 				evsize[k] = eillen;
 				pDataArray[k]->evsz = &evsize[k];
-
-				pDataArray[k]->greitis = greitis;
-				pDataArray[k]->tonas = tonas;
 			}
 		}
 	}
 
 	unsigned long hrM[MAX_PASTR_SK];
+	WMEngineOutputHandle hOutput;
+
 	if (hr == 0)
 	{
 		for (k = 0; k < pastrSk; k++)
 		{
-			hrM[k] = TextToSound(pDataArray[k]);
+			if (pDataArray[k]->evsz == NULL)
+				return 9;
+			hrM[k] = -synthesizeWholeTextAlt(pDataArray[k]->text, true, &hOutput);
+
+			int wordCount;
+			int res = WMEngineOutputGetWordCount(hOutput, &wordCount);
+			if (res != 0) return res;
+
+			for (int l = 0; l < wordCount; l++)
+			{
+				char * szWord = NULL;
+				res = WMEngineOutputGetWord(hOutput, l, &szWord);
+				if (res != 0) return res;
+
+				printf("%s\n",szWord );
+
+				/*int optionCount;
+				res = WMEngineOutputGetWordOptionCount(hOutput, l, &optionCount);
+				if (res != 0) return res;
+
+				for (int m = 0; m < optionCount; m++)
+				{
+					int value;
+					res = WMEngineOutputGetWord(hOutput, l, m, &value);
+					if (res != 0) return res;
+				}*/
+			}
+
+			WMEngineOutputFree(&hOutput);
 		}
 	}
 

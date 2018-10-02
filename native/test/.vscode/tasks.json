@@ -4,26 +4,34 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "create output dir",
+            "label": "create output dir x86",
             "type": "shell",
             "command": "mkdir",
             "args": [
                 "-p",
-                "../../bin/Linux_x86/"
+                "../../sandara/Linux_x86/"
             ]
         },
         {
-            "label": "build test",
+            "label": "create output dir x86_64",
+            "type": "shell",
+            "command": "mkdir",
+            "args": [
+                "-p",
+                "../../sandara/Linux_x86_64/"
+            ]
+        },
+        {
+            "label": "build test x86_64",
             "type": "shell",
             "command": "g++",
             "args": [
                 "-g",
                 "LithUSStest.cpp",
                 "-o",
-                "../../bin/Linux_x86/test",
+                "../../sandara/Linux_x86_64/test",
                 "-Wl,-rpath,.",
-                "-L../../bin/Linux_x86/",
-                "-lTextNormalization",
+                "-L../../sandara/Linux_x86_64/",
                 "-ltranscrLUSS",
                 "-finput-charset=windows-1257",
                 "-fexec-charset=windows-1257"
@@ -33,7 +41,31 @@
                 "isDefault": true
             },
             "dependsOn": [
-                "create output dir"
+                "create output dir x86_64"
+            ]
+        },
+        {
+            "label": "build test x86",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-m32",
+                "-g", 
+                "LithUSStest.cpp",
+                "-o",
+                "../../sandara/Linux_x86/test",
+                "-Wl,-rpath,.",
+                "-L../../sandara/Linux_x86/",
+                "-ltranscrLUSS",
+                "-finput-charset=windows-1257",
+                "-fexec-charset=windows-1257"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "create output dir x86"
             ]
         }
     ]

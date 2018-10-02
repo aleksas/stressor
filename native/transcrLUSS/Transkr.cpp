@@ -12,7 +12,7 @@
 #include "../include/LithUSS_Error.h"
 #include "../include/TextNormalization.h"
 
-#include "Kircdb.h"
+#include "../include/Kircdb.h"
 #include "fv2id.h"
 #include "transcribe_rules.h"
 
