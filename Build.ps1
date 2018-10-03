@@ -4,11 +4,14 @@ Write-Host Starting build
 if ($isWindows) {
 
 msbuild .\native\source\.VS2017\PhonologyEngine.sln /property:Platform=x86 /p:Configuration=Release  /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+Push-AppveyorArtifact ./phonology_engine/Win32_x86/PhonologyEngine.dll
+
 msbuild .\native\source\.VS2017\PhonologyEngine.sln /property:Platform=x64 /p:Configuration=Release  /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+Push-AppveyorArtifact ./phonology_engine/Win64_x64/PhonologyEngine.dll
 
 } else {
 
-	sudo apt-get install libc6-dev-i386 gcc-multilib g++-multilib
+	sudo apt-get install -y libc6-dev-i386 gcc-multilib g++-multilib
 
 	cd native/source
 
@@ -20,7 +23,7 @@ msbuild .\native\source\.VS2017\PhonologyEngine.sln /property:Platform=x64 /p:Co
 	  ArKirciuoti.cpp strtokf.cpp stringWithLetterPosition.cpp TextNormalization.cpp \
 	  -shared -o ../../phonology_engine/Linux_x86/libPhonologyEngine.so -Wno-write-strings
 	  
-	appveyor PushArtifact ../../phonology_engine/Linux_x86/libPhonologyEngine.so
+	Push-AppveyorArtifact ../../phonology_engine/Linux_x86/libPhonologyEngine.so
 
 	mkdir -p ../../phonology_engine/Linux_x86_64
 
@@ -30,7 +33,7 @@ msbuild .\native\source\.VS2017\PhonologyEngine.sln /property:Platform=x64 /p:Co
 	  ArKirciuoti.cpp strtokf.cpp stringWithLetterPosition.cpp TextNormalization.cpp \
 	  -shared -o ../../phonology_engine/Linux_x86_64/libPhonologyEngine.so -Wno-write-strings
 
-	appveyor PushArtifact ../../phonology_engine/Linux_x86_64/libPhonologyEngine.so
+	Push-AppveyorArtifact ../../phonology_engine/Linux_x86_64/libPhonologyEngine.so
 
 	foreach ($artifactName in $artifacts.keys) {
 	  echo $artifacts[$artifactName]
