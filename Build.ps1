@@ -45,7 +45,10 @@ if ($isWindows) {
 
 	if (!$jobToWaitId) {throw "Unable t get JobId for the job `"$env:jobToWait`""}
 
+	mkdir -p phonology_engine/Win32_x86
 	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$jobToWaitId/artifacts/phonology_engine/Win32_x86/PhonologyEngine.dll -FileName phonology_engine/Win32_x86/PhonologyEngine.dll
+
+	mkdir -p phonology_engine/Win64_x64
 	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$jobToWaitId/artifacts/phonology_engine/Win64_x64/PhonologyEngine.dll -FileName phonology_engine/Win64_x64/PhonologyEngine.dll
 	
 	ls phonology_engine
