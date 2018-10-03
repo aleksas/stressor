@@ -31,11 +31,15 @@ class PhonologyEngine:
                 
             return res
 
-        processed_phrases = []
-        for phrase in text.split(separators[0]):
-            processed_phrases.append(self._process(phrase, separators[1:]))
-        
-        return (separators[0], processed_phrases)
+        phrases = text.split(separators[0])
+        if len(phrases) == 1:
+            return self._process(phrases[0], separators[1:])
+        else:
+            processed_phrases = []
+            for phrase in phrases:
+                processed_phrases.append(self._process(phrase, separators[1:]))
+            
+            return (separators[0], processed_phrases)
 
     def process(self, s):
         return self._process(s)
