@@ -22,13 +22,13 @@ build_script:
 
 artifacts:
   - path: ./phonology_engine/*/*PhonologyEngine.*
-  name: phonology-engine-artifacts
+  name: phonology_engine_artifacts
 
 deploy:
 - provider: GitHub
   tag: phonology-engine-v$(appveyor_build_version)
   release: phonology-engine-v$(appveyor_build_version)
-  artifact: phonology-engine-artifacts
+  artifact: phonology_engine_artifacts
   draft: false
   prerelease: false
   auth_token:
