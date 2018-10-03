@@ -1,12 +1,12 @@
 LIBRARY
-	PhonologyEngneInit
-	PhonologyEngneProcessPhrase
+	PhonologyEngineInit
+	PhonologyEngineProcessPhrase
 
-	PhonologyEngneOutputFree
+	PhonologyEngineOutputFree
 
-	PhonologyEngneOutputGetWordCount
-	PhonologyEngneOutputGetWord
-	PhonologyEngneOutputGetWordSyllables
-	PhonologyEngneOutputGetWordStressOptionCount
-	PhonologyEngneOutputGetWordStressOptionSelected
-	PhonologyEngneOutputGetWordStressOption
+	PhonologyEngineOutputGetWordCount
+	PhonologyEngineOutputGetWord
+	PhonologyEngineOutputGetWordSyllables
+	PhonologyEngineOutputGetWordStressOptionCount
+	PhonologyEngineOutputGetWordStressOptionSelected
+	PhonologyEngineOutputGetWordStressOption

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from os.path import join, dirname, abspath
-from .wm_wngine_output import WMEngineOutput
+from .pe_output import PhonologyEngineOutput
 
 _phrase_separators = '.?!;:\r\n'
 _max_prase_length = 200
@@ -17,7 +17,7 @@ class PhonologyEngine:
             if len(text) > _max_prase_length:
                 raise Exception('Phrase "%s" length exceeds %d char limit' % (text, _max_prase_length))
 
-            output = WMEngineOutput(text)
+            output = PhonologyEngineOutput(text)
             
             res = [
                     {

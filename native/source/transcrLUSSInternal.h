@@ -21,10 +21,10 @@ typedef struct _WordStressOptions {
 	variantas * pStressOptions;
 } WordStressOptions;
 
-typedef struct PhonologyEngneOutput_ {
+typedef struct PhonologyEngineOutput_ {
     int wordCount;
     WordStressOptions * pArOutputWords;
-    } PhonologyEngneOutput;
+    } PhonologyEngineOutput;
 
 #define GetObjectPtr(objectType, objectHandle) ((objectType*) objectHandle)
 

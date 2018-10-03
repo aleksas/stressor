@@ -15,20 +15,20 @@
 
 extern "C" {
 
-typedef void * PhonologyEngneOutputHandle;
+typedef void * PhonologyEngineOutputHandle;
 typedef int Result;
 	
-EXPORT Result PhonologyEngneInit();
+EXPORT Result PhonologyEngineInit();
 
-EXPORT Result PhonologyEngneProcessPhrase(char *tekstas, bool normalize, PhonologyEngneOutputHandle * pHandle);
-EXPORT Result PhonologyEngneOutputFree(PhonologyEngneOutputHandle * pHandle);
+EXPORT Result PhonologyEngineProcessPhrase(char *tekstas, bool normalize, PhonologyEngineOutputHandle * pHandle);
+EXPORT Result PhonologyEngineOutputFree(PhonologyEngineOutputHandle * pHandle);
 
-EXPORT Result PhonologyEngneOutputGetWordCount(PhonologyEngneOutputHandle hOutput, int * pValue);
-EXPORT Result PhonologyEngneOutputGetWord(PhonologyEngneOutputHandle hOutput, int wordIndex, char ** pszValue);
-EXPORT Result PhonologyEngneOutputGetWordSyllables(PhonologyEngneOutputHandle hOutput, int wordIndex, char ** pszValue);
-EXPORT Result PhonologyEngneOutputGetWordStressOptionCount(PhonologyEngneOutputHandle hOutput, int wordIndex, int * pValue);
-EXPORT Result PhonologyEngneOutputGetWordStressOptionSelected(PhonologyEngneOutputHandle hOutput, int wordIndex, int * pValue);
-EXPORT Result PhonologyEngneOutputGetWordStressOption(PhonologyEngneOutputHandle hOutput, int wordIndex, int optionIndex, int * pLetterIndex, int * pStressType, int * pGrammarRule);
+EXPORT Result PhonologyEngineOutputGetWordCount(PhonologyEngineOutputHandle hOutput, int * pValue);
+EXPORT Result PhonologyEngineOutputGetWord(PhonologyEngineOutputHandle hOutput, int wordIndex, char ** pszValue);
+EXPORT Result PhonologyEngineOutputGetWordSyllables(PhonologyEngineOutputHandle hOutput, int wordIndex, char ** pszValue);
+EXPORT Result PhonologyEngineOutputGetWordStressOptionCount(PhonologyEngineOutputHandle hOutput, int wordIndex, int * pValue);
+EXPORT Result PhonologyEngineOutputGetWordStressOptionSelected(PhonologyEngineOutputHandle hOutput, int wordIndex, int * pValue);
+EXPORT Result PhonologyEngineOutputGetWordStressOption(PhonologyEngineOutputHandle hOutput, int wordIndex, int optionIndex, int * pLetterIndex, int * pStressType, int * pGrammarRule);
 
 }
 

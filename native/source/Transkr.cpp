@@ -35,7 +35,7 @@ SkDu 1-skardus,2-duslus,3-betkoks.
 SkPb 1-kitur,2-einam,4-1ikair.
 */
 
-EXPORT Result PhonologyEngneInit()
+EXPORT Result PhonologyEngineInit()
 {
 	int j, n;
 	char laik[200];
