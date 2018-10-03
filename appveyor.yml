@@ -16,6 +16,11 @@ branches:
   
 build_script:
   - ps: .\Build.ps1
+  
+before_deploy:
+  - ps: .\BeforeDeploy.ps1
+    on:
+      APPVEYOR_BUILD_WORKER_IMAGE : Ubuntu
 
 artifacts:
   - path: ./phonology_engine/*/*PhonologyEngine.*
