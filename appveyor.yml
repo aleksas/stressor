@@ -1,0 +1,11 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+platform:
+- x86
+- x64
+build:
+  project: .\native\source\.VS2017\PhonologyEngine.sln
+  verbosity: minimal
+artifacts:
+- path: .\phonology_engine\Win32_x86\PhonologyEngine.dll
+- path: .\phonology_engine\Win64_x64\PhonologyEngine.dll
