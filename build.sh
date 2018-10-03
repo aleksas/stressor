@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sudo apt-get install -y libc6-dev-i386 gcc-multilib g++-multilib
-
 cd native/source
 
 mkdir -p ../../phonology_engine/Linux_x86
