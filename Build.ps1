@@ -45,11 +45,14 @@ if ($isWindows) {
 
 	if (!$jobToWaitId) {throw "Unable t get JobId for the job `"$env:jobToWait`""}
 
-	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$jobToWaitId/artifacts/phonology_engine/Win32_x86/PhonologyEngine.dll
-	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$jobToWaitId/artifacts/phonology_engine/Win64_x64/PhonologyEngine.dll
+	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$jobToWaitId/artifacts/phonology_engine/Win32_x86/PhonologyEngine.dll -FileName phonology_engine/Win32_x86/PhonologyEngine.dll
+	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$jobToWaitId/artifacts/phonology_engine/Win64_x64/PhonologyEngine.dll -FileName phonology_engine/Win64_x64/PhonologyEngine.dll
+	
+	ls phonology_engine
 	
 	########## Build WHEEL ##########
 	
+	sudo apt install python3-pip
 	sudo python3 -m pip install --user --upgrade setuptools wheel
 	
 	python3 setup.py sdist bdist_wheel
