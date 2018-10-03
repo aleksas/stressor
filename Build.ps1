@@ -3,14 +3,17 @@ Write-Host Starting build
 
 if ($isWindows) {
 
+	######## Build native windows libraries ##########
+
 	msbuild .\native\source\.VS2017\PhonologyEngine.sln /property:Platform=x86 /p:Configuration=Release  /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 	Push-AppveyorArtifact ./phonology_engine/Win32_x86/PhonologyEngine.dll -FileName phonology_engine/Win32_x86/PhonologyEngine.dll -DeploymentName to-publish
 
 	msbuild .\native\source\.VS2017\PhonologyEngine.sln /property:Platform=x64 /p:Configuration=Release  /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 	Push-AppveyorArtifact ./phonology_engine/Win64_x64/PhonologyEngine.dll -FileName phonology_engine/Win64_x64/PhonologyEngine.dll -DeploymentName to-publish
 
-
 } else {
+
+	######## Build native linux libraries ##########
 
 	sudo apt-get install -y libc6-dev-i386 gcc-multilib g++-multilib
 
@@ -51,6 +54,9 @@ if ($isWindows) {
 	mkdir -p phonology_engine/Win64_x64
 	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$jobToWaitId/artifacts/phonology_engine/Win64_x64/PhonologyEngine.dll -FileName phonology_engine/Win64_x64/PhonologyEngine.dll
 	
+	echo 'APPVEYOR_BUILD_NUMBER:' + $env:APPVEYOR_BUILD_NUMBER
+	echo 'APPVEYOR_BUILD_VERSION:' + $env:APPVEYOR_BUILD_VERSION
+
 	ls phonology_engine
 	
 	########## Build WHEEL ##########
@@ -59,10 +65,5 @@ if ($isWindows) {
 	sudo python3 -m pip install --user --upgrade setuptools wheel
 	
 	python3 setup.py sdist bdist_wheel
-
-	sudo apt install python-pip -y
-	sudo python -m pip install --user --upgrade setuptools wheel
-
-	python setup.py sdist bdist_wheel
 
 }

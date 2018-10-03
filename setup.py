@@ -22,10 +22,6 @@ try:
 finally:
     readme.close()
 
-class BinaryDistribution(Distribution):
-    def is_pure(self):
-        return True
-
 setup(
     name='phonology_engine',
     author='Aleksas Pielikis',
