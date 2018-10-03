@@ -8,6 +8,8 @@ msbuild .\native\source\.VS2017\PhonologyEngine.sln /property:Platform=x64 /p:Co
 
 } else {
 
+	sudo apt-get install libc6-dev-i386 gcc-multilib g++-multilib
+
 	cd native/source
 
 	mkdir -p ../../phonology_engine/Linux_x86
