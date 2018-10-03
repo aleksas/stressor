@@ -23,8 +23,8 @@ artifacts:
 
 deploy:
   - provider: GitHub
-    tag: phonology-engine-v$(appveyor_build_version)-$(APPVEYOR_BUILD_VERSION)
-    release: phonology-engine-v$(appveyor_build_version)-$(APPVEYOR_BUILD_VERSION)
+    tag: phonology-engine-v$(APPVEYOR_BUILD_VERSION)
+    release: phonology-engine-v$(APPVEYOR_BUILD_VERSION)
     artifacts: myartifact
     draft: false
     prerelease: false
