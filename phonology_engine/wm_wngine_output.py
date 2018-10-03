@@ -1,4 +1,4 @@
-import wm_engine_native
+from . import wm_engine_native
 
 class WMEngineOutput:
     def __init__(self, text, normalize=True):

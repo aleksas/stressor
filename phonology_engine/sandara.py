@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from os.path import join, dirname, abspath
-from wm_wngine_output import WMEngineOutput
+from .wm_wngine_output import WMEngineOutput
 
 _phrase_separators = '.?!;:\r\n'
 _max_prase_length = 200
