@@ -1,22 +1,37 @@
-version: '{build}'  
-image: 
+version: '{build}'
+
+image:
   - Visual Studio 2017
-  - Ubuntu
+  - Ubuntuinit:
+
 platform:
 - x64
-pull_requests:  
+
+pull_requests:
   do_not_increment_build_number: true
-branches:  
+  
+branches:
   only:
   - master
 
-environment:  
+environment:
   APPVEYOR_YML_DISABLE_PS_LINUX: true
-build_script:  
+  
+build_script:
 - ps: .\Build.ps1
 - sh: ./build.sh
 
-test: off  
-artifacts:  
-- path: .\phonology_engine\Win*_x*\PhonologyEngine.dll
-- path: .\phonology_engine\Linux_x*\libPhonologyEngine.so
+deploy:
+- provider: GitHub
+  tag: phonology-engine-v$(appveyor_build_version)
+  release: phonology-engine-v$(appveyor_build_version)
+  artifact: ./phonology_engine/[^/]+x86[^/].*/(lib)?PhonologyEngine\.(dll|so)
+  draft: false
+  prerelease: false
+  auth_token:
+    secure: t46UA2N2hilxV8hM/cwfL/WSingfgu3CWV80YHzyKbWdaMTBZmW6hq34+7P6h+XU
+
+test: off
+
+artifacts:
+- path: ./phonology_engine/[^/]+x86[^/].*/(lib)?PhonologyEngine\.(dll|so)

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get install -y libc6-dev-i386
+sudo apt-get install -y libc6-dev-i386 gcc-multilib g++-multilib
 
 cd native/source
 
