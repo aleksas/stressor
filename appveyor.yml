@@ -15,11 +15,11 @@ branches:
   - master
 
 environment:
-  APPVEYOR_YML_DISABLE_PS_LINUX: true
+  APPVEYOR_YML_DISABLE_PS_LINUX: false #true
   
 build_script:
 - ps: .\Build.ps1
-- sh: ./build.sh
+#- sh: ./build.sh
 
 deploy:
 - provider: GitHub
@@ -32,6 +32,3 @@ deploy:
     secure: t46UA2N2hilxV8hM/cwfL/WSingfgu3CWV80YHzyKbWdaMTBZmW6hq34+7P6h+XU
 
 test: off
-
-artifacts:
-- path: ./phonology_engine/*/*PhonologyEngine.*
