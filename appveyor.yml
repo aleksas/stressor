@@ -5,7 +5,7 @@ image:
   - Ubuntu
 
 platform:
-- x64
+  - x64
 
 pull_requests:
   do_not_increment_build_number: true
@@ -18,21 +18,21 @@ environment:
   APPVEYOR_YML_DISABLE_PS_LINUX: false #true
   
 build_script:
-- ps: .\Build.ps1
+  - ps: .\Build.ps1
 
 artifacts:
   - path: ./phonology_engine/*/*PhonologyEngine.*
-  name: phonology_engine_artifacts
+    name: myartifact
 
 deploy:
-- provider: GitHub
-  tag: phonology-engine-v$(appveyor_build_version)
-  release: phonology-engine-v$(appveyor_build_version)
-  artifact: phonology_engine_artifacts
-  draft: false
-  prerelease: false
-  auth_token:
-    secure: t46UA2N2hilxV8hM/cwfL/WSingfgu3CWV80YHzyKbWdaMTBZmW6hq34+7P6h+XU
+  - provider: GitHub
+    tag: phonology-engine-v$(appveyor_build_version)
+    release: phonology-engine-v$(appveyor_build_version)
+    artifacts: myartifact
+    draft: false
+    prerelease: false
+    auth_token:
+      secure: t46UA2N2hilxV8hM/cwfL/WSingfgu3CWV80YHzyKbWdaMTBZmW6hq34+7P6h+XU
 
 skip_tags: true
 test: off
