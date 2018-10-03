@@ -35,23 +35,18 @@ if ($isWindows) {
 		"Content-type" = "application/json"
 	}
 	
-	[datetime]$stop = ([datetime]::Now).AddMinutes($env:TimeOutMins)
 	[bool]$success = $false  
 
-	while(!$success -and ([datetime]::Now) -lt $stop) {
-		$project = Invoke-RestMethod -Uri "https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG" -Headers $headers -Method GET
+	$project = Invoke-RestMethod -Uri "https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG" -Headers $headers -Method GET
 
-		$jobToWaitJson = $project.build.jobs | where {$_.name -eq $env:jobToWait}  
-		$success = $jobToWaitJson.status -eq "success"
-		$jobToWaitId = $jobToWaitJson.jobId;
-		if (!$success) {Start-sleep 5}
-	}
+	$jobToWaitJson = $project.build.jobs | where {$_.name -eq $env:jobToWait}  
+	$success = $jobToWaitJson.status -eq "success"
+	$jobToWaitId = $jobToWaitJson.jobId;
 
-	if (!$success) {throw "Job `"$env:jobToWait`" was not finished in $env:TimeOutMins minutes"}
 	if (!$jobToWaitId) {throw "Unable t get JobId for the job `"$env:jobToWait`""}
 
-	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$jobToWaitId/artifacts/phonology_engine/%2FWin32_x86%2FPhonologyEngine.dll
-	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$jobToWaitId/artifacts/phonology_engine/%2FWin64_x64%2FPhonologyEngine.dll
+	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$jobToWaitId/artifacts/phonology_engine/Win32_x86/PhonologyEngine.dll
+	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$jobToWaitId/artifacts/phonology_engine/Win64_x64/PhonologyEngine.dll
 	
 	########## Build WHEEL ##########
 	
