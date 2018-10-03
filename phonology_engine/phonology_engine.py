@@ -5,7 +5,7 @@ from .wm_wngine_output import WMEngineOutput
 _phrase_separators = '.?!;:\r\n'
 _max_prase_length = 200
 
-class Sandara:
+class PhonologyEngine:
     def __init__(self):
         pass
 
@@ -43,6 +43,6 @@ class Sandara:
 if __name__ == '__main__':
     from pprint import pprint
 
-    s = Sandara()
-    proc = s.process('Europos tautos kuri geriausia. Laba diena. Viskas bus gerai!')
+    pe = PhonologyEngine()
+    proc = pe.process('Europos tautos kuri geriausia. Laba diena. Viskas bus gerai!')
     pprint(proc)

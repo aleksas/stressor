@@ -23,7 +23,7 @@ finally:
     readme.close()
 
 class BinaryDistribution(Distribution):
-    def has_ext_modules(foo):
+    def is_pure(self):
         return True
 
 setup(
@@ -52,6 +52,5 @@ setup(
             'Linux_x86/libPhonologyEngine.so',
             'Win32_x86/PhonologyEngine.dll',
             'Win64_x64/PhonologyEngine.dll'],
-    },
-    distclass=BinaryDistribution
+    }
 )
