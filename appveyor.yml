@@ -22,16 +22,17 @@ build_script:
 
 artifacts:
   - path: ./phonology_engine/*/*PhonologyEngine.*
-    name: propelleride
+  name: phonology-engine-artifacts
 
 deploy:
 - provider: GitHub
   tag: phonology-engine-v$(appveyor_build_version)
   release: phonology-engine-v$(appveyor_build_version)
-  artifact: ./phonology_engine/*/*PhonologyEngine.*
+  artifact: phonology-engine-artifacts
   draft: false
   prerelease: false
   auth_token:
     secure: t46UA2N2hilxV8hM/cwfL/WSingfgu3CWV80YHzyKbWdaMTBZmW6hq34+7P6h+XU
 
+skip_tags: true
 test: off
