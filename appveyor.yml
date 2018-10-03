@@ -20,8 +20,6 @@ build_script:
 artifacts:
   - path: ./dist/*
     name: myartifact
-    on:
-      APPVEYOR_BUILD_WORKER_IMAGE : Ubuntu
 
 deploy:
   - provider: GitHub
