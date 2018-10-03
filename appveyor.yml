@@ -19,7 +19,10 @@ environment:
   
 build_script:
 - ps: .\Build.ps1
-#- sh: ./build.sh
+
+artifacts:
+  - path: ./phonology_engine/*/*PhonologyEngine.*
+    name: propelleride
 
 deploy:
 - provider: GitHub
