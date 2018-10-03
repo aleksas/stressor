@@ -25,7 +25,7 @@ deploy:
 - provider: GitHub
   tag: phonology-engine-v$(appveyor_build_version)
   release: phonology-engine-v$(appveyor_build_version)
-  artifact: ./phonology_engine/[^/]+x86[^/].*/(lib)?PhonologyEngine\.(dll|so)
+  artifact: .[\\/]phonology_engine[\\/][^\\/]+[\\/](lib)?PhonologyEngine\.(dll|so)
   draft: false
   prerelease: false
   auth_token:
@@ -34,4 +34,4 @@ deploy:
 test: off
 
 artifacts:
-- path: ./phonology_engine/[^/]+x86[^/].*/(lib)?PhonologyEngine\.(dll|so)
+- path: .[\\/]phonology_engine[\\/][^\\/]+[\\/](lib)?PhonologyEngine\.(dll|so)
