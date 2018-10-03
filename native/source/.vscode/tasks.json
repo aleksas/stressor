@@ -9,7 +9,7 @@
             "command": "mkdir",
             "args": [
                 "-p",
-                "../../sandara/Linux_x86/"
+                "../../phonology_engine/Linux_x86/"
             ]
         },
         {
@@ -18,12 +18,12 @@
             "command": "mkdir",
             "args": [
                 "-p",
-                "../../sandara/Linux_x86_64/"
+                "../../phonology_engine/Linux_x86_64/"
             ]
         },
         {
-            "label": "build transcrLUSS x86",
-            "identifier": "build transcrLUSS x86",
+            "label": "build PhonologyEngine x86",
+            "identifier": "build PhonologyEngine x86",
             "type": "shell",
             "command": "g++",
             "args": [
@@ -33,7 +33,7 @@
                 "ArKirciuoti.cpp",
                 "strtokf.cpp",
                 "stringWithLetterPosition.cpp", "TextNormalization.cpp",
-                "-shared", "-o", "../../sandara/Linux_x86/libtranscrLUSS.so",
+                "-shared", "-o", "../../phonology_engine/Linux_x86/libPhonologyEngine.so",
                 "-Wno-write-strings"
             ],
             "group": {
@@ -45,8 +45,8 @@
             ]
         },
         {
-            "label": "build transcrLUSS x86_64",
-            "identifier": "build transcrLUSS x86_64",
+            "label": "build PhonologyEngine x86_64",
+            "identifier": "build PhonologyEngine x86_64",
             "type": "shell",
             "command": "g++",
             "args": [
@@ -56,7 +56,7 @@
                 "ArKirciuoti.cpp",
                 "strtokf.cpp",
                 "stringWithLetterPosition.cpp", "TextNormalization.cpp",
-                "-shared", "-o", "../../sandara/Linux_x86_64/libtranscrLUSS.so",
+                "-shared", "-o", "../../phonology_engine/Linux_x86_64/libPhonologyEngine.so",
                 "-Wno-write-strings"
             ],
             "group": {

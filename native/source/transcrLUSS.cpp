@@ -487,7 +487,7 @@ int normalize(char * szText, char ** pszNormalizedTextBuffer, int ** ppLetterPos
 }
 
 ////////////Pagrindine sintezavimo funkcija////////////////////////////////////////////////////////////////////////////////
-EXPORT Result synthesizeWholeTextAlt(char *tekstas, bool normalizeText, WMEngineOutputHandle * pHandle)
+EXPORT Result PhonologyEngneProcessPhrase(char *tekstas, bool normalizeText, PhonologyEngneOutputHandle * pHandle)
 {
 	int bufsize = TEXTBUFSIZE;
 	char *normtextbuf = NULL;
@@ -498,7 +498,7 @@ EXPORT Result synthesizeWholeTextAlt(char *tekstas, bool normalizeText, WMEngine
 	char stressBuffer[1024];	
 	int bufferSize = 1024;
 
-	WMEngineOutput * pOutput = (WMEngineOutput*) calloc(1, sizeof(WMEngineOutput));
+	PhonologyEngneOutput * pOutput = (PhonologyEngneOutput*) calloc(1, sizeof(PhonologyEngneOutput));
 	
 	if (!pOutput)
 		hr = -1;
@@ -564,9 +564,9 @@ EXPORT Result synthesizeWholeTextAlt(char *tekstas, bool normalizeText, WMEngine
 	return hr;
 }
 
-EXPORT Result WMEngineOutputFree(WMEngineOutputHandle * pHandle)
+EXPORT Result PhonologyEngneOutputFree(PhonologyEngneOutputHandle * pHandle)
 {
-	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, *pHandle);
+	PhonologyEngneOutput * pOutput = GetObjectPtr(PhonologyEngneOutput, *pHandle);
 
 	for (int i = 0; i < pOutput->wordCount; i++)
 	{
@@ -575,12 +575,13 @@ EXPORT Result WMEngineOutputFree(WMEngineOutputHandle * pHandle)
 	free(pOutput->pArOutputWords);
 	free(pOutput);
 	*pHandle = NULL;
+
+	return 0;
 }
 
-
-EXPORT Result WMEngineOutputGetWordCount(WMEngineOutputHandle hOutput, int * pValue)
+EXPORT Result PhonologyEngneOutputGetWordCount(PhonologyEngneOutputHandle hOutput, int * pValue)
 {
-	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, hOutput);
+	PhonologyEngneOutput * pOutput = GetObjectPtr(PhonologyEngneOutput, hOutput);
 
 	if (!pValue) return -1;
 
@@ -589,9 +590,9 @@ EXPORT Result WMEngineOutputGetWordCount(WMEngineOutputHandle hOutput, int * pVa
 	return 0;
 }
 
-EXPORT Result WMEngineOutputGetWord(WMEngineOutputHandle hOutput, int wordIndex, char ** pszValue)
+EXPORT Result PhonologyEngneOutputGetWord(PhonologyEngneOutputHandle hOutput, int wordIndex, char ** pszValue)
 {
-	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, hOutput);
+	PhonologyEngneOutput * pOutput = GetObjectPtr(PhonologyEngneOutput, hOutput);
 
 	if (!pszValue) return -1;
 	if (wordIndex >= pOutput->wordCount) return -2;
@@ -601,9 +602,9 @@ EXPORT Result WMEngineOutputGetWord(WMEngineOutputHandle hOutput, int wordIndex,
 	return 0;
 }
 
-EXPORT Result WMEngineOutputGetWordSyllables(WMEngineOutputHandle hOutput, int wordIndex, char ** pszValue)
+EXPORT Result PhonologyEngneOutputGetWordSyllables(PhonologyEngneOutputHandle hOutput, int wordIndex, char ** pszValue)
 {
-	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, hOutput);
+	PhonologyEngneOutput * pOutput = GetObjectPtr(PhonologyEngneOutput, hOutput);
 
 	if (!pszValue) return -1;
 	if (wordIndex >= pOutput->wordCount) return -2;
@@ -613,9 +614,9 @@ EXPORT Result WMEngineOutputGetWordSyllables(WMEngineOutputHandle hOutput, int w
 	return 0;
 }
 
-EXPORT Result WMEngineOutputGetWordStressOptionCount(WMEngineOutputHandle hOutput, int wordIndex, int * pValue)
+EXPORT Result PhonologyEngneOutputGetWordStressOptionCount(PhonologyEngneOutputHandle hOutput, int wordIndex, int * pValue)
 {
-	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, hOutput);
+	PhonologyEngneOutput * pOutput = GetObjectPtr(PhonologyEngneOutput, hOutput);
 
 	if (!pValue) return -1;
 
@@ -626,9 +627,9 @@ EXPORT Result WMEngineOutputGetWordStressOptionCount(WMEngineOutputHandle hOutpu
 	return 0;
 }
 
-EXPORT Result WMEngineOutputGetWordStressOptionSelected(WMEngineOutputHandle hOutput, int wordIndex, int * pValue)
+EXPORT Result PhonologyEngneOutputGetWordStressOptionSelected(PhonologyEngneOutputHandle hOutput, int wordIndex, int * pValue)
 {
-	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, hOutput);
+	PhonologyEngneOutput * pOutput = GetObjectPtr(PhonologyEngneOutput, hOutput);
 
 	if (!pValue) return -1;
 	if (wordIndex >= pOutput->wordCount) return -2;
@@ -638,9 +639,9 @@ EXPORT Result WMEngineOutputGetWordStressOptionSelected(WMEngineOutputHandle hOu
 	return 0;
 }
 
-EXPORT Result WMEngineOutputGetWordStressOption(WMEngineOutputHandle hOutput, int wordIndex, int optionIndex, int * pLetterIndex, int * pStressType, int * pGrammarRule)
+EXPORT Result PhonologyEngneOutputGetWordStressOption(PhonologyEngneOutputHandle hOutput, int wordIndex, int optionIndex, int * pLetterIndex, int * pStressType, int * pGrammarRule)
 {
-	WMEngineOutput * pOutput = GetObjectPtr(WMEngineOutput, hOutput);
+	PhonologyEngneOutput * pOutput = GetObjectPtr(PhonologyEngneOutput, hOutput);
 
 	if (!pLetterIndex) return -1;
 	if (!pStressType) return -2;

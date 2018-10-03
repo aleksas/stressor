@@ -13,6 +13,7 @@
 #include "../include/TextNormalization.h"
 
 #include "../include/Kircdb.h"
+#include "../include/transcrLUSS.h"
 #include "fv2id.h"
 #include "transcribe_rules.h"
 
@@ -34,7 +35,7 @@ SkDu 1-skardus,2-duslus,3-betkoks.
 SkPb 1-kitur,2-einam,4-1ikair.
 */
 
-EXPORT int initTranscrLUSS()
+EXPORT Result PhonologyEngneInit()
 {
 	int j, n;
 	char laik[200];

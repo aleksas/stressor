@@ -9,7 +9,7 @@
             "command": "mkdir",
             "args": [
                 "-p",
-                "../../sandara/Linux_x86/"
+                "../../phonology_engine/Linux_x86/"
             ]
         },
         {
@@ -18,7 +18,7 @@
             "command": "mkdir",
             "args": [
                 "-p",
-                "../../sandara/Linux_x86_64/"
+                "../../phonology_engine/Linux_x86_64/"
             ]
         },
         {
@@ -29,10 +29,10 @@
                 "-g",
                 "LithUSStest.cpp",
                 "-o",
-                "../../sandara/Linux_x86_64/test",
+                "../../phonology_engine/Linux_x86_64/test",
                 "-Wl,-rpath,.",
-                "-L../../sandara/Linux_x86_64/",
-                "-ltranscrLUSS",
+                "-L../../phonology_engine/Linux_x86_64/",
+                "-lPhonologyEngine",
                 "-finput-charset=windows-1257",
                 "-fexec-charset=windows-1257"
             ],
@@ -53,10 +53,10 @@
                 "-g", 
                 "LithUSStest.cpp",
                 "-o",
-                "../../sandara/Linux_x86/test",
+                "../../phonology_engine/Linux_x86/test",
                 "-Wl,-rpath,.",
-                "-L../../sandara/Linux_x86/",
-                "-ltranscrLUSS",
+                "-L../../phonology_engine/Linux_x86/",
+                "-lPhonologyEngine",
                 "-finput-charset=windows-1257",
                 "-fexec-charset=windows-1257"
             ],

@@ -10,7 +10,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-from sandara.version import VERSION
+from phonology_engine.version import VERSION
 __version__ = VERSION
 
 try:
@@ -27,13 +27,13 @@ class BinaryDistribution(Distribution):
         return True
 
 setup(
-    name='sandara',
+    name='phonology_engine',
     author='Aleksas Pielikis',
     version=VERSION,
     author_email='ant.kampo@gmail.com',
     description="Module to get pronunciation and hyphenation for words in a given sentence in Lithuanian language",
     long_description=long_description,
-    url='https://github.com/aleksas/sandara',
+    url='https://github.com/aleksas/phonology_engine',
     license='BSD',
     packages=find_packages(exclude=['contrib', 'docs']),
     classifiers=[
@@ -45,13 +45,13 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
     ],
-    keywords=['sandara', 'pronunciation', 'shyphenation'],
+    keywords=['phonology_engine', 'phonology', 'pronunciation', 'shyphenation'],
     package_data={
-        'sandara': [
-            'Linux_x86_64/libtranscrLUSS.so',
-            'Linux_x86/libtranscrLUSS.so',
-            'Windows_x86/transcrLUSS.dll',
-            'Windows_x64/transcrLUSS.dll'],
+        'phonology_engine': [
+            'Linux_x86_64/libPhonologyEngine.so',
+            'Linux_x86/libPhonologyEngine.so',
+            'Win32_x86/PhonologyEngine.dll',
+            'Win64_x64/PhonologyEngine.dll'],
     },
     distclass=BinaryDistribution
 )

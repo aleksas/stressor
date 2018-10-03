@@ -1,20 +1,20 @@
 {
 	"folders": [
 		{
-			"path": "native/transcrLUSS"
+			"path": "native/source"
 		},
 		{
 			"path": "native/test"
 		},
 		{
-			"path": "sandara"
+			"path": "phonology_engine"
 		}
 	],
 	"launch": {
 		"compounds": [{
 			"name": "Main Run",
 			"configurations": [
-				"(gdb) Launch LithUSSTest"
+				"(gdb) Launch PhonologyEngine"
 			]
 		}]
 	},

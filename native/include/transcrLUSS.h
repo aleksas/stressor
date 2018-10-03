@@ -15,20 +15,20 @@
 
 extern "C" {
 
-typedef void * WMEngineOutputHandle;
+typedef void * PhonologyEngneOutputHandle;
 typedef int Result;
 	
-EXPORT Result initTranscrLUSS();
+EXPORT Result PhonologyEngneInit();
 
-EXPORT Result synthesizeWholeTextAlt(char *tekstas, bool normalize, WMEngineOutputHandle * pHandle);
-EXPORT Result WMEngineOutputFree(WMEngineOutputHandle * pHandle);
+EXPORT Result PhonologyEngneProcessPhrase(char *tekstas, bool normalize, PhonologyEngneOutputHandle * pHandle);
+EXPORT Result PhonologyEngneOutputFree(PhonologyEngneOutputHandle * pHandle);
 
-EXPORT Result WMEngineOutputGetWordCount(WMEngineOutputHandle hOutput, int * pValue);
-EXPORT Result WMEngineOutputGetWord(WMEngineOutputHandle hOutput, int wordIndex, char ** pszValue);
-EXPORT Result WMEngineOutputGetWordSyllables(WMEngineOutputHandle hOutput, int wordIndex, char ** pszValue);
-EXPORT Result WMEngineOutputGetWordStressOptionCount(WMEngineOutputHandle hOutput, int wordIndex, int * pValue);
-EXPORT Result WMEngineOutputGetWordStressOptionSelected(WMEngineOutputHandle hOutput, int wordIndex, int * pValue);
-EXPORT Result WMEngineOutputGetWordStressOption(WMEngineOutputHandle hOutput, int wordIndex, int optionIndex, int * pLetterIndex, int * pStressType, int * pGrammarRule);
+EXPORT Result PhonologyEngneOutputGetWordCount(PhonologyEngneOutputHandle hOutput, int * pValue);
+EXPORT Result PhonologyEngneOutputGetWord(PhonologyEngneOutputHandle hOutput, int wordIndex, char ** pszValue);
+EXPORT Result PhonologyEngneOutputGetWordSyllables(PhonologyEngneOutputHandle hOutput, int wordIndex, char ** pszValue);
+EXPORT Result PhonologyEngneOutputGetWordStressOptionCount(PhonologyEngneOutputHandle hOutput, int wordIndex, int * pValue);
+EXPORT Result PhonologyEngneOutputGetWordStressOptionSelected(PhonologyEngneOutputHandle hOutput, int wordIndex, int * pValue);
+EXPORT Result PhonologyEngneOutputGetWordStressOption(PhonologyEngneOutputHandle hOutput, int wordIndex, int optionIndex, int * pLetterIndex, int * pStressType, int * pGrammarRule);
 
 }
 
