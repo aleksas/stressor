@@ -98,7 +98,7 @@ if ($after_test -and $isLinux){
 	python setup.py sdist bdist_wheel
 }
 
-if ($on_finish -and $isLinux){
+if ($on_finish){
 	Write-Host On Finish
 	
 	# this uploads nosetests.xml produced in test_script step

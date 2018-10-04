@@ -28,11 +28,6 @@ artifacts:
   - path: ./dist/*
     name: myartifact
 
-on_finish:
-  # Upload test results to AppVeyor
-  - ps: .\Build.ps1 -on_finish
-
-
 deploy:
   - provider: GitHub
     tag: phonology-engine-v$(APPVEYOR_BUILD_VERSION)
@@ -44,5 +39,9 @@ deploy:
       secure: t46UA2N2hilxV8hM/cwfL/WSingfgu3CWV80YHzyKbWdaMTBZmW6hq34+7P6h+XU
     on:
       APPVEYOR_BUILD_WORKER_IMAGE : Ubuntu
+
+on_finish:
+  # Upload test results to AppVeyor
+  - ps: .\Build.ps1 -on_finish
 
 skip_tags: true
