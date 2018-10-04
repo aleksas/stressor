@@ -64,13 +64,15 @@ if ($test){
 	
 	# Install nose tests
 	
+	echo "LastExitCode Before: $LastExitCode"
 	# this produces nosetests.xml
 	python setup.py nosetests --with-xunit
+	echo "LastExitCode After: $LastExitCode"
 	
 	if ($LastExitCode -ne 0) {
-		echo "LastExitCode: $LastExitCode"
 		$host.SetShouldExit($LastExitCode)
 	}
+	echo "LastExitCode After2: $LastExitCode"
 	
 }
 
