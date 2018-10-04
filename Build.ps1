@@ -61,6 +61,7 @@ if ($test){
 	python setup.py nosetests --with-xunit
 	
 	if ($LastExitCode -ne 0) {
+		echo "LastExitCode: $LastExitCode"
 		$host.SetShouldExit($LastExitCode)
 	}
 }
