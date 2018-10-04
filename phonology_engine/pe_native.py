@@ -57,7 +57,7 @@ def _check(res):
 
 _check( _PhonologyEngineInit() )
 
-def synthesizeWholeTextAlt(text, normalize=True):
+def phonology_engine_process_phrase(text, normalize=True):
     semi_normalized_text = text.upper()
 
     handle = c_void_p()
@@ -67,20 +67,20 @@ def synthesizeWholeTextAlt(text, normalize=True):
 
     return handle
 
-def PhonologyEngineOutputFree(handle):
+def phonology_engine_output_free(handle):
     _PhonologyEngineOutputFree( byref(handle) )
 
-def PhonologyEngineOutputGetWordCount(handle):
+def phonology_engine_output_get_word_count(handle):
     value = c_int(0)
     _check( _PhonologyEngineOutputGetWordCount(handle, byref(value)))
     return value
 
-def PhonologyEngineOutputGetWord(handle, word_index):
+def phonology_engine_output_get_word(handle, word_index):
     cs = c_char_p()
     _check( _PhonologyEngineOutputGetWord(handle, c_int(word_index), byref(cs)) )    
     return cs.value.decode(_native_encoding)
 
-def PhonologyEngineOutputGetWordSyllables(handle, word_index):
+def phonology_engine_output_get_word_syllables(handle, word_index):
     cs = c_char_p()
 
     _check( _PhonologyEngineOutputGetWordSyllables(handle, c_int(word_index), byref(cs)) ) 
@@ -97,7 +97,7 @@ def PhonologyEngineOutputGetWordSyllables(handle, word_index):
 
     return indeces
 
-def PhonologyEngineOutputGetWordStressOptions(handle, word_index):
+def phonology_engine_output_get_word_stress_options(handle, word_index):
     count, selected = c_int(0), c_int(0)
 
     _check( _PhonologyEngineOutputGetWordStressOptionCount(handle, c_int(word_index), byref(count)) ) 
