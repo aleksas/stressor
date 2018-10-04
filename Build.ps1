@@ -65,15 +65,7 @@ if ($test){
 	}
 }
 
-if ($on_finish){
-	Write-Host On Finish
-	
-	# this uploads nosetests.xml produced in test_script step
-	$wc = New-Object 'System.Net.WebClient'
-	$wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nosetests.xml))
-}
-
-if ($after_test -and (-NOT $isWindows)){
+if ($after_test -and $isLinux){
 	Write-Host After Test
 	
 	# Download VS artifacts
@@ -104,4 +96,12 @@ if ($after_test -and (-NOT $isWindows)){
 	# Build WHEEL dsitro
 	
 	python setup.py sdist bdist_wheel
+}
+
+if ($on_finish -and $isLinux){
+	Write-Host On Finish
+	
+	# this uploads nosetests.xml produced in test_script step
+	$wc = New-Object 'System.Net.WebClient'
+	$wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nosetests.xml))
 }
