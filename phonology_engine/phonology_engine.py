@@ -44,7 +44,7 @@ class PhonologyEngine:
             return (separators[0], processed_phrases)
 
     def process(self, s, normalize=True):
-        return self._process(s, normalize)
+        return self._process(s, normalize=normalize)
 
 if __name__ == '__main__':
     from pprint import pprint
