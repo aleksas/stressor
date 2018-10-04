@@ -1,3 +1,4 @@
+from __future__ import with_statement
 from . import pe_native
 
 class PhonologyEngineOutput:
