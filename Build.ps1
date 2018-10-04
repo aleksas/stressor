@@ -8,10 +8,10 @@ param (
 $ErrorActionPreference = 'Stop';
 
 if ($isWindows) {
-	python -m pip install --user --upgrade setuptools wheel nose
+	python -m pip install --upgrade setuptools wheel nose
 } else {
 	sudo apt install python3-pip -y
-	python -m pip install --upgrade setuptools wheel nose
+	python -m pip install --user --upgrade setuptools wheel nose
 }
 
 if ($build) {
