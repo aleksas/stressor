@@ -8,13 +8,18 @@ param (
 $ErrorActionPreference = 'Stop';
 
 if ($isWindows) {
+
 	python -m pip install --upgrade setuptools wheel nose
+	
 } else {
+
 	sudo apt install python3-pip -y
 	python -m pip install --user --upgrade setuptools wheel nose
+	
 }
 
 if ($build) {
+
 	Write-Host Starting build
 	
 	if ($isWindows) {
@@ -50,9 +55,11 @@ if ($build) {
 	}
 	
 	python setup.py build
+	
 }
 
 if ($test){
+
 	Write-Host Starting test
 	
 	# Install nose tests
@@ -64,9 +71,11 @@ if ($test){
 		echo "LastExitCode: $LastExitCode"
 		$host.SetShouldExit($LastExitCode)
 	}
+	
 }
 
-if ($after_test -and $isLinux){
+if ($after_test -and $isLinux) {
+
 	Write-Host After Test
 	
 	# Download VS artifacts
@@ -97,12 +106,15 @@ if ($after_test -and $isLinux){
 	# Build WHEEL dsitro
 	
 	python setup.py sdist bdist_wheel
+	
 }
 
-if ($on_finish){
+if ($on_finish) {
+
 	Write-Host On Finish
 	
 	# this uploads nosetests.xml produced in test_script step
 	$wc = New-Object 'System.Net.WebClient'
 	$wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nosetests.xml))
+	
 }
