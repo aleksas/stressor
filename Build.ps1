@@ -12,7 +12,7 @@ if ($isWindows) {
 	python -m pip install --upgrade pip setuptools wheel nose
 	
 } else {
-	
+
 	sudo apt install python-pip -y
 	python -m pip install --user --upgrade pip setuptools wheel nose
 	
@@ -66,7 +66,17 @@ if ($test){
 	
 	echo "LastExitCode Before: $LastExitCode"
 	# this produces nosetests.xml
-	python setup.py nosetests --with-xunit
+	Try
+	{
+
+		python setup.py nosetests --with-xunit
+
+	}
+	Catch
+	{
+		echo $_.Exception.Message
+	}
+	
 	echo "LastExitCode After: $LastExitCode"
 	
 	if ($LastExitCode -ne 0) {
