@@ -1,4 +1,5 @@
-LIBRARY
+LIBRARY PhonologyEngine
+EXPORTS 
 	PhonologyEngineInit
 	PhonologyEngineProcessPhrase
 

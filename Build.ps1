@@ -59,11 +59,28 @@ if ($isWindows) {
 
 	ls phonology_engine
 	
-	########## Build WHEEL ##########
+	
+	########## Install pip and wheel ##########
 	
 	sudo apt install python3-pip -y
 	sudo python3 -m pip install --user --upgrade setuptools wheel
 	
-	python3 setup.py sdist bdist_wheel
+	########## Build and test WHEEL package ##########
 
+	python setup.py build
+	
+	# this produces nosetests.xml
+	python setup.py nosetests --with-xunit
+	
+	# this uploads nosetests.xml produced in test_script step
+	$wc = New-Object 'System.Net.WebClient'
+	$wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nosetests.xml))
+
+	if ($LastExitCode -ne 0) {
+		$host.SetShouldExit($LastExitCode)
+	}
+	
+	########## Build WHEEL dsitro ##########
+	
+	python3 setup.py sdist bdist_wheel
 }

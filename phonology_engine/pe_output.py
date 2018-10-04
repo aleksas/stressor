@@ -6,6 +6,12 @@ class PhonologyEngineOutput:
 
     def __del__(self):
         pe_native.phonology_engine_output_free(self.handle)
+        
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        del self
 
     def get_word_count(self):
         return pe_native.phonology_engine_output_get_word_count(self.handle).value
