@@ -15,7 +15,18 @@ branches:
   - master
   
 build_script:
-  - ps: .\Build.ps1
+  - ps: .\Build.ps1 -build
+  
+test_script:
+  # Run the project tests and store results in .xml log
+  - ps: .\Build.ps1 -test
+  
+after_test:
+  - ps: .\Build.ps1 -after_test
+  
+on_finish:
+  # Upload test results to AppVeyor
+  - ps: .\Build.ps1 -on_finish
 
 artifacts:
   - path: ./dist/*
