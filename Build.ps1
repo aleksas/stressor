@@ -8,7 +8,6 @@ param (
 $ErrorActionPreference = 'Stop';
 
 if ($isWindows) {
-	apt install python3-pip -y
 	python3 -m pip install --user --upgrade setuptools wheel nose
 } else {
 	sudo apt install python3-pip -y
