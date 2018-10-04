@@ -1,6 +1,7 @@
 from ctypes import *
 from platform import uname, architecture
 from os.path import join, dirname
+from struct import unpack
 
 folder = ''
 prefix = ''
@@ -84,8 +85,8 @@ def phonology_engine_output_get_word_syllables(handle, word_index):
     cs = c_char_p()
 
     _check( _PhonologyEngineOutputGetWordSyllables(handle, c_int(word_index), byref(cs)) ) 
-    
-    values = [int(v) for v in cs.value.split(b'\n')[0]]
+
+    values = [unpack("<b", v)[0] for v in cs.value.split(b'\n')[0]]
     
     if values[-1] == 2 and len(values) > 1:
         values = values[0:-1]

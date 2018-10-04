@@ -31,7 +31,7 @@ setup(
     long_description=long_description,
     url='https://github.com/aleksas/phonology_engine',
     license='BSD',
-    packages=find_packages(exclude=['contrib', 'docs']),
+    packages=['phonology_engine', 'phonology_engine.tests'],
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
