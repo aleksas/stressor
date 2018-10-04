@@ -8,10 +8,10 @@ param (
 $ErrorActionPreference = 'Stop';
 
 if ($isWindows) {
-	python3 -m pip install --user --upgrade setuptools wheel nose
+	python -m pip install --user --upgrade setuptools wheel nose
 } else {
 	sudo apt install python3-pip -y
-	sudo python3 -m pip install --user --upgrade setuptools wheel nose
+	python -m pip install --user --upgrade setuptools wheel nose
 }
 
 if ($build) {
@@ -103,5 +103,5 @@ if ($after_test -and (-NOT $isWindows)){
 
 	# Build WHEEL dsitro
 	
-	python3 setup.py sdist bdist_wheel
+	python setup.py sdist bdist_wheel
 }
