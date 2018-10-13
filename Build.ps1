@@ -7,7 +7,7 @@ param (
 	[switch]$upload
 )
 
-$ErrorActionPreference = 'Stop';
+#$ErrorActionPreference = 'Stop';
 
 if ($init) {
 
