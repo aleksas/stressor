@@ -83,13 +83,24 @@ if ($test) {
 		
 }
 
+function Get-JobId
+{
+	param([string]$previousJob = "unknown")
+
+	$previousJobJson = $project.build.jobs | where {$_.name -eq $previousJob}  
+	$success = $previousJobJson.status -eq "success"
+	$previousJobId = $previousJobJson.jobId;
+
+	if (!$previousJobId) {throw "Unable t get JobId for the job `"$previousJob`""}
+
+	return $previousJobId
+}
+
 if ($after_test -and $isLinux -and $env:PLATFORM -eq 'x64') {
 
 	Write-Host After Test
 	
-	# Download VS artifacts
-	
-	$env:previousJob = 'Image: Visual Studio 2017'
+	# Download artifacts
 	
 	$headers = @{
 		"Authorization" = "Bearer $ApiKey"
@@ -100,18 +111,15 @@ if ($after_test -and $isLinux -and $env:PLATFORM -eq 'x64') {
 
 	$project = Invoke-RestMethod -Uri "https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG" -Headers $headers -Method GET
 
-	$previousJobJson = $project.build.jobs | where {$_.name -eq $env:previousJob}  
-	$success = $previousJobJson.status -eq "success"
-	$previousJobId = $previousJobJson.jobId;
-
-	if (!$previousJobId) {throw "Unable t get JobId for the job `"$env:previousJob`""}
-
+	$previousJobId = Get-JobId 'Image: Visual Studio 2017; Platform: x32'
 	mkdir -p phonology_engine/Win32_x86
 	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$previousJobId/artifacts/phonology_engine/Win32_x86/PhonologyEngine.dll -FileName phonology_engine/Win32_x86/PhonologyEngine.dll
 
+	$previousJobId = Get-JobId 'Image: Visual Studio 2017; Platform: x64'
 	mkdir -p phonology_engine/Win64_x64
 	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$previousJobId/artifacts/phonology_engine/Win64_x64/PhonologyEngine.dll -FileName phonology_engine/Win64_x64/PhonologyEngine.dll
 
+	$previousJobId = Get-JobId 'Image: Ubuntu; Platform: x32'
 	mkdir -p phonology_engine/Linux_x86
 	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$previousJobId/artifacts/phonology_engine/Linux_x86/PhonologyEngine.dll -FileName phonology_engine/Linux_x86/libPhonologyEngine.so
 
