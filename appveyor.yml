@@ -18,11 +18,8 @@ branches:
   only:
   - master
 
-init:
-  - ps: .\Build.ps1 -init
-
 build_script:
-  - ps: .\Build.ps1 -build
+  - ps: .\Build.ps1 -init -build
   
 test_script:
   - ps: .\Build.ps1 -test
