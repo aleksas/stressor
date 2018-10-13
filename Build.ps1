@@ -17,7 +17,7 @@ if ($init) {
 		python -m pip install --upgrade pip setuptools wheel nose
 	} else {
 		sudo apt install python-pip -y	
-		yes | python -m pip install --user --upgrade pip setuptools wheel nose twine
+		python -m pip install --user --upgrade pip setuptools wheel nose twine
 	}
 }
 
