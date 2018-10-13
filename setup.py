@@ -33,9 +33,6 @@ setup(
     url='https://github.com/aleksas/phonology_engine',
     license='BSD',
     packages=['phonology_engine', 'phonology_engine.tests'],
-    install_requires=[
-        'six',
-    ],
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from os.path import join, dirname, abspath
-from six import string_types
 from .pe_output import PhonologyEngineOutput, PhonologyEngineNormalizedPhrases
 from .pe_native import phonology_engine_process_phrase, phonology_engine_normalize_text
 
@@ -79,12 +78,10 @@ class PhonologyEngine:
             return ' '.join([self.collapse(r, word_format) for r in output])
         elif isinstance(output, dict):
             return output[word_format] # Processed word info
-        elif isinstance(output, string_types):
-            return output # Only normalized string
         elif output == '':
             return ''
-        else:
-            raise Exception("Unexpected output type: '%s'. Value '%s'" % (type(output), str(output)))
+        else: ## assume it's string otherwise six package is needed for py2.7/3 compat
+            return output # Only normalized string
 
     def normalize(self, text):
         return self._process(text.upper(), normalize=True, include_syllables=False, normalize_only=True)
