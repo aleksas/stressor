@@ -1,0 +1,8 @@
+bin/*
+build/*
+dist/*
+sandara.egg-info/*
+sandara/Linux_x86/*
+sandara/Linux_x86_64/*
+sandara/__pycache__/*
+

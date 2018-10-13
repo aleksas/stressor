@@ -1,0 +1,13 @@
+LIBRARY PhonologyEngine
+EXPORTS 
+	PhonologyEngineInit
+	PhonologyEngineProcessPhrase
+
+	PhonologyEngineOutputFree
+
+	PhonologyEngineOutputGetWordCount
+	PhonologyEngineOutputGetWord
+	PhonologyEngineOutputGetWordSyllables
+	PhonologyEngineOutputGetWordStressOptionCount
+	PhonologyEngineOutputGetWordStressOptionSelected
+	PhonologyEngineOutputGetWordStressOption

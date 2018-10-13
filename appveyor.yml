@@ -1,0 +1,50 @@
+version: '{build}'
+
+environment:
+  PYPI_PASSWORD:
+    secure: ZGdkYN7pV4Az5pgUQmhfJw==
+
+image:
+  - Visual Studio 2017
+  - Ubuntu
+
+platform:
+  - x64
+
+pull_requests:
+  do_not_increment_build_number: true
+  
+branches:
+  only:
+  - master
+  
+build_script:
+  - ps: .\Build.ps1 -build
+  
+test_script:
+  # Run the project tests and store results in .xml log
+  - ps: .\Build.ps1 -test
+  
+after_test:
+  - ps: .\Build.ps1 -after_test
+
+artifacts:
+  - path: ./dist/*
+    name: myartifact
+
+deploy:
+  - provider: GitHub
+    tag: phonology-engine-v$(APPVEYOR_BUILD_VERSION)
+    release: phonology-engine-v$(APPVEYOR_BUILD_VERSION)
+    artifacts: myartifact
+    draft: false
+    prerelease: false
+    auth_token:
+      secure: t46UA2N2hilxV8hM/cwfL/WSingfgu3CWV80YHzyKbWdaMTBZmW6hq34+7P6h+XU
+    on:
+      APPVEYOR_BUILD_WORKER_IMAGE : Ubuntu
+
+on_finish:
+  - ps: .\Build.ps1 -on_finish -upload
+
+skip_tags: true

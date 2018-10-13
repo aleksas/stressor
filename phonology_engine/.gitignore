@@ -1,0 +1,6 @@
+*.pyc
+__pycache__/*
+Win32_x86/*
+Win64_x64/*
+Linux_x86/*
+Linux_x86_64/*

@@ -1,0 +1,71 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [ 
+        {
+            "label": "create output dir x86",
+            "type": "shell",
+            "command": "mkdir",
+            "args": [
+                "-p",
+                "../../phonology_engine/Linux_x86/"
+            ]
+        },
+        {
+            "label": "create output dir x86_64",
+            "type": "shell",
+            "command": "mkdir",
+            "args": [
+                "-p",
+                "../../phonology_engine/Linux_x86_64/"
+            ]
+        },
+        {
+            "label": "build PhonologyEngine x86",
+            "identifier": "build PhonologyEngine x86",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-fPIC", "-m32", "-g", "Transkr.cpp", "transcrLUSS.cpp",
+                "Skiemen.cpp", 
+                "Kircdb.cpp", "fv2id.cpp",
+                "ArKirciuoti.cpp", "Engine.cpp",
+                "strtokf.cpp",
+                "stringWithLetterPosition.cpp", "TextNormalization.cpp",
+                "-shared", "-o", "../../phonology_engine/Linux_x86/libPhonologyEngine.so",
+                "-Wno-write-strings"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "create output dir x86"
+            ]
+        },
+        {
+            "label": "build PhonologyEngine x86_64",
+            "identifier": "build PhonologyEngine x86_64",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-fPIC", "-g", "Transkr.cpp", "transcrLUSS.cpp",
+                "Skiemen.cpp", 
+                "Kircdb.cpp", "fv2id.cpp",
+                "ArKirciuoti.cpp", "Engine.cpp",
+                "strtokf.cpp",
+                "stringWithLetterPosition.cpp", "TextNormalization.cpp",
+                "-shared", "-o", "../../phonology_engine/Linux_x86_64/libPhonologyEngine.so",
+                "-Wno-write-strings"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "create output dir x86_64"
+            ]
+        }
+    ]
+}
