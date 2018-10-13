@@ -71,7 +71,6 @@ class PhonologyEngine:
     def collapse(self, output, word_format='word'):
         if word_format not in _valid_word_formats:
             raise Exception('Invalide word format "%s". Can be one of: %s.' % (word_format, str(_valid_word_formats)))
-
         if isinstance(output, tuple):
             return ((output[0] + ' ').join([self.collapse(r, word_format) for r in output[1]])).strip()
         elif isinstance(output, list):
