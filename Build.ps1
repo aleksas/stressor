@@ -14,10 +14,10 @@ if ($init) {
 	Write-Host Initializing
 
 	if ($isWindows) {
-		python -m pip install -y --upgrade pip setuptools wheel nose six
+		python -m pip install --upgrade pip setuptools wheel nose six
 	} else {
 		sudo apt install python-pip -y	
-		python -m pip install -y --user --upgrade pip setuptools wheel nose six twine
+		yes | python -m pip install --user --upgrade pip setuptools wheel nose six twine
 	}
 }
 
