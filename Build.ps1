@@ -9,7 +9,7 @@ param (
 $ErrorActionPreference = 'Stop';
 
 if ($isWindows) {
-	python -m pip install --upgrade pip setuptools wheel nose
+	cmd /c python -m pip install --upgrade pip setuptools wheel nose 2`>`&1
 } else {
 	sudo apt install python-pip -y	
 	python -m pip install --user --upgrade pip setuptools wheel nose
