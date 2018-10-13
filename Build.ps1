@@ -28,26 +28,34 @@ if ($build) {
 	if ($isWindows) {
 
 		# Build native windows libraries
-		msbuild .\native\source\.VS2017\PhonologyEngine.sln /property:Platform=x86 /p:Configuration=Release  /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-		Push-AppveyorArtifact ./phonology_engine/Win32_x86/PhonologyEngine.dll -FileName phonology_engine/Win32_x86/PhonologyEngine.dll -DeploymentName to-publish
-		
-		msbuild .\native\source\.VS2017\PhonologyEngine.sln /property:Platform=x64 /p:Configuration=Release  /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-		Push-AppveyorArtifact ./phonology_engine/Win64_x64/PhonologyEngine.dll -FileName phonology_engine/Win64_x64/PhonologyEngine.dll -DeploymentName to-publish
+		if($env:PLATFORM -eq 'x32') {
+			msbuild .\native\source\.VS2017\PhonologyEngine.sln /property:Platform=x86 /p:Configuration=Release  /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+			Push-AppveyorArtifact ./phonology_engine/Win32_x86/PhonologyEngine.dll -FileName phonology_engine/Win32_x86/PhonologyEngine.dll -DeploymentName to-publish
+		} else { # x64
+			msbuild .\native\source\.VS2017\PhonologyEngine.sln /property:Platform=x64 /p:Configuration=Release  /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+			Push-AppveyorArtifact ./phonology_engine/Win64_x64/PhonologyEngine.dll -FileName phonology_engine/Win64_x64/PhonologyEngine.dll -DeploymentName to-publish
+		}
 
 	} else {
 
 		# Build native linux libraries
-
-		sudo apt-get install -y libc6-dev-i386 gcc-multilib g++-multilib
+		# sudo apt-get install -y libc6-dev-i386 gcc-multilib g++-multilib
 
 		cd native/source
 
-		mkdir -p ../../phonology_engine/Linux_x86
-		g++ -fPIC -m32 -g -I ../include/ Transkr.cpp transcrLUSS.cpp Skiemen.cpp Kircdb.cpp fv2id.cpp ArKirciuoti.cpp Engine.cpp strtokf.cpp stringWithLetterPosition.cpp TextNormalization.cpp -shared -o ../../phonology_engine/Linux_x86/libPhonologyEngine.so -Wno-write-strings
-		  
-		mkdir -p ../../phonology_engine/Linux_x86_64
-		g++ -fPIC -g -I ../include/ Transkr.cpp transcrLUSS.cpp Skiemen.cpp Kircdb.cpp fv2id.cpp ArKirciuoti.cpp Engine.cpp strtokf.cpp stringWithLetterPosition.cpp TextNormalization.cpp -shared -o ../../phonology_engine/Linux_x86_64/libPhonologyEngine.so -Wno-write-strings
+		# -g0 strips debug info, -g adds debug info
 
+		if($env:PLATFORM -eq 'x32') {
+			mkdir -p ../../phonology_engine/Linux_x86
+			g++ -fPIC -m32 -g0 -I ../include/ Transkr.cpp transcrLUSS.cpp Skiemen.cpp Kircdb.cpp fv2id.cpp ArKirciuoti.cpp Engine.cpp strtokf.cpp stringWithLetterPosition.cpp TextNormalization.cpp -shared -o ../../phonology_engine/Linux_x86/libPhonologyEngine.so -Wno-write-strings
+			
+			Push-AppveyorArtifact ./phonology_engine/Linux_x86/libPhonologyEngine.so -FileName phonology_engine/Linux_x86/libPhonologyEngine.so -DeploymentName to-publish
+		} else { # x64
+			mkdir -p ../../phonology_engine/Linux_x86_64
+			g++ -fPIC -g0 -I ../include/ Transkr.cpp transcrLUSS.cpp Skiemen.cpp Kircdb.cpp fv2id.cpp ArKirciuoti.cpp Engine.cpp strtokf.cpp stringWithLetterPosition.cpp TextNormalization.cpp -shared -o ../../phonology_engine/Linux_x86_64/libPhonologyEngine.so -Wno-write-strings
+			
+			Push-AppveyorArtifact ./phonology_engine/Linux_x86_64/libPhonologyEngine.so -FileName phonology_engine/Linux_x86_64/libPhonologyEngine.so -DeploymentName to-publish
+		}
 		cd ../..
 		
 	}
@@ -75,13 +83,24 @@ if ($test) {
 		
 }
 
-if ($after_test -and $isLinux) {
+function Get-JobId
+{
+	param([string]$previousJob = "unknown")
+
+	$previousJobJson = $project.build.jobs | where {$_.name -eq $previousJob}  
+	$success = $previousJobJson.status -eq "success"
+	$previousJobId = $previousJobJson.jobId;
+
+	if (!$previousJobId) {throw "Unable t get JobId for the job `"$previousJob`""}
+
+	return $previousJobId
+}
+
+if ($after_test -and $isLinux -and $env:PLATFORM -eq 'x64') {
 
 	Write-Host After Test
 	
-	# Download VS artifacts
-	
-	$env:previousJob = 'Image: Visual Studio 2017'
+	# Download artifacts
 	
 	$headers = @{
 		"Authorization" = "Bearer $ApiKey"
@@ -92,17 +111,17 @@ if ($after_test -and $isLinux) {
 
 	$project = Invoke-RestMethod -Uri "https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG" -Headers $headers -Method GET
 
-	$previousJobJson = $project.build.jobs | where {$_.name -eq $env:previousJob}  
-	$success = $previousJobJson.status -eq "success"
-	$previousJobId = $previousJobJson.jobId;
-
-	if (!$previousJobId) {throw "Unable t get JobId for the job `"$env:previousJob`""}
-
+	$previousJobId = Get-JobId 'Image: Visual Studio 2017; Platform: x32'
 	mkdir -p phonology_engine/Win32_x86
 	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$previousJobId/artifacts/phonology_engine/Win32_x86/PhonologyEngine.dll -FileName phonology_engine/Win32_x86/PhonologyEngine.dll
 
+	$previousJobId = Get-JobId 'Image: Visual Studio 2017; Platform: x64'
 	mkdir -p phonology_engine/Win64_x64
 	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$previousJobId/artifacts/phonology_engine/Win64_x64/PhonologyEngine.dll -FileName phonology_engine/Win64_x64/PhonologyEngine.dll
+
+	$previousJobId = Get-JobId 'Image: Ubuntu; Platform: x32'
+	mkdir -p phonology_engine/Linux_x86
+	Start-FileDownload  https://ci.appveyor.com/api/buildjobs/$previousJobId/artifacts/phonology_engine/Linux_x86/PhonologyEngine.dll -FileName phonology_engine/Linux_x86/libPhonologyEngine.so
 
 	# Build WHEEL dsitro
 
