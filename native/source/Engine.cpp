@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdio.h>
 
-char * szEmptyStr = '\0';
+char * szEmptyStr = "\0";
 
 extern "C" {
 

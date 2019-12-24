@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	int pastrSk;
 
 	int hr = 0;
-	if ((df = fopen("duom.txt", "rb")) == NULL)
+	if ((df = fopen("../tests/duom.txt", "rb")) == NULL)
 	{
 		spausdinti_loga("Nepavyko atidaryti duom.txt failo");
 		hr = -1;
