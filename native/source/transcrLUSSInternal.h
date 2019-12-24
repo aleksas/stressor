@@ -16,6 +16,7 @@ extern "C" {
 typedef struct _NormalizedText {
 	int phraseCount;
 	char ** pSzPhrases;
+	int ** pArLetterMap;
 } NormalizedText;
 
 typedef struct _WordStressOptions {

@@ -30,6 +30,7 @@ EXPORT Result PhonologyEngineNormalizeText(char * szText, NormalizedTextHandle *
 	char *pos = szNormalizedText;
 	char sakinys[200];
 	char * pPhrases[1024];
+	int * pPhraseLetterMap[1024];
 	int n, phraseCount = 0;
 
 	while ((pos != (void*)1))
@@ -37,7 +38,6 @@ EXPORT Result PhonologyEngineNormalizeText(char * szText, NormalizedTextHandle *
 		int hr2 = 0;
 		int lp = (int)(pos - szNormalizedText);
 		n = sscanf(pos, "%[^\n]", sakinys);
-		pos = strchr(pos, '\n') + 1;
 		if (n < 0)
 			break;
 		if (n == 0)
@@ -48,17 +48,23 @@ EXPORT Result PhonologyEngineNormalizeText(char * szText, NormalizedTextHandle *
 			sakinys[0] = 0; //jei eilute tuscia arba tik neskaitytini simboliai
 		
 		pPhrases[phraseCount] = (char*) malloc((strlen(sakinys) + 1) * sizeof(char));
-		if (!pPhrases[phraseCount]) return -3;
+		pPhraseLetterMap[phraseCount] = (int*) malloc((strlen(sakinys)) * sizeof(int));
+		if (!pPhrases[phraseCount] || !pPhraseLetterMap[phraseCount]) return -3;
 		strcpy(pPhrases[phraseCount], sakinys);
+		memcpy(pPhraseLetterMap[phraseCount], pArLetterPosistion + lp, strlen(sakinys) * sizeof(int));
+
+		pos = strchr(pos, '\n') + 1;
 		phraseCount++;
 	}
 
 	pNormalizedText->phraseCount = phraseCount;
 	pNormalizedText->pSzPhrases = (char**) malloc(sizeof(char*) * phraseCount);
+	pNormalizedText->pArLetterMap = (int**) malloc(sizeof(int*) * phraseCount);
 
-	if (!pNormalizedText->pSzPhrases) return -4;
+	if (!pNormalizedText->pSzPhrases || !pNormalizedText->pArLetterMap) return -4;
 
 	memcpy(pNormalizedText->pSzPhrases, pPhrases, sizeof(char*) * phraseCount);
+	memcpy(pNormalizedText->pArLetterMap, pPhraseLetterMap, sizeof(int*) * phraseCount);
 
 	*pHandle = pNormalizedText;	
 
@@ -79,10 +85,12 @@ EXPORT Result PhonologyEngineNormalizedTextFree(NormalizedTextHandle * pHandle)
 		for (int i = 0; i < pNormalizedText->phraseCount; i++)
 		{
 			free(pNormalizedText->pSzPhrases[i]);
+			free(pNormalizedText->pArLetterMap[i]);
 		}
 	}
 
 	free(pNormalizedText->pSzPhrases);
+	free(pNormalizedText->pArLetterMap);
 	free(pNormalizedText);
 	*pHandle = NULL;
 
@@ -113,6 +121,24 @@ EXPORT Result PhonologyEngineNormalizedTextGetPhrase(NormalizedTextHandle handle
 	if (index < 0 || index >= pOutput->phraseCount) return -3;
 
 	*pSzValue = pOutput->pSzPhrases[index];
+
+	return 0;
+}
+
+EXPORT Result PhonologyEngineNormalizedTextGetPhraseLetterMap(NormalizedTextHandle handle, int index, int ** pArValue, int * pCount)
+{
+	NormalizedText * pOutput = GetObjectPtr(NormalizedText, handle);
+
+	if (!handle) return -1;
+	if (!pArValue) return -2;
+	if (!pCount) return -3;
+
+	int count = 0;
+
+	if (index < 0 || index >= pOutput->phraseCount) return -4;
+
+	*pArValue = pOutput->pArLetterMap[index];
+	*pCount = strlen(pOutput->pSzPhrases[index]);
 
 	return 0;
 }

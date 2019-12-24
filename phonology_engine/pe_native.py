@@ -54,6 +54,9 @@ _PhonologyEngineNormalizedTextGetPhraseCount.argtypes = [c_void_p, POINTER(c_int
 _PhonologyEngineNormalizedTextGetPhrase = _PhonologyEngineLibrary.PhonologyEngineNormalizedTextGetPhrase#(NormalizedTextHandle handle, int index, char ** pSzValue);
 _PhonologyEngineNormalizedTextGetPhrase.argtypes = [c_void_p, c_int, POINTER(c_char_p)]
 
+_PhonologyEngineNormalizedTextGetPhraseLetterMap = _PhonologyEngineLibrary.PhonologyEngineNormalizedTextGetPhraseLetterMap#(NormalizedTextHandle handle, int index, int ** pArValue, int * pCount)
+_PhonologyEngineNormalizedTextGetPhraseLetterMap.argtypes = [c_void_p, c_int, POINTER(POINTER(c_int)), POINTER(c_int)]
+
 _PhonologyEngineProcessPhrase = _PhonologyEngineLibrary.PhonologyEngineProcessPhrase#(char * szNormalizedText, PhonologyEngineOutputHandle * pHandle);
 _PhonologyEngineProcessPhrase.argtypes = [c_char_p, POINTER(c_void_p)]
 
@@ -110,6 +113,14 @@ def phonology_engine_normalized_text_get_phrase(handle, index):
     if not cs.value:
         return ''
     return cs.value.decode(_native_encoding)
+
+def phonology_engine_normalized_text_get_phrase_letter_map(handle, index):
+    ci = POINTER(C_INT)()
+    c = c_int(0)
+
+    _check( PhonologyEngineNormalizedTextGetPhraseLetterMap( handle, c_int(index), byref(ci), byref(c) ) )
+
+    return [ci[i] for i in c]
 
 def phonology_engine_process_phrase(text):
 

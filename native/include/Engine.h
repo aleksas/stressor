@@ -25,6 +25,7 @@ EXPORT Result PhonologyEngineNormalizeText(char * szText, NormalizedTextHandle *
 EXPORT Result PhonologyEngineNormalizedTextFree(NormalizedTextHandle * pHandle);
 EXPORT Result PhonologyEngineNormalizedTextGetPhraseCount(NormalizedTextHandle handle, int * pValue);
 EXPORT Result PhonologyEngineNormalizedTextGetPhrase(NormalizedTextHandle handle, int index, char ** pSzValue);
+EXPORT Result PhonologyEngineNormalizedTextGetPhraseLetterMap(NormalizedTextHandle handle, int index, int ** pArValue, int * count);
 
 EXPORT Result PhonologyEngineProcessPhrase(char * szNormalizedText, PhonologyEngineOutputHandle * pHandle);
 EXPORT Result PhonologyEngineOutputFree(PhonologyEngineOutputHandle * pHandle);
