@@ -115,7 +115,7 @@ def phonology_engine_normalized_text_get_phrase(handle, index):
     return cs.value.decode(_native_encoding)
 
 def phonology_engine_normalized_text_get_phrase_letter_map(handle, index):
-    ci = POINTER(C_INT)()
+    ci = POINTER(c_int)()
     c = c_int(0)
 
     _check( PhonologyEngineNormalizedTextGetPhraseLetterMap( handle, c_int(index), byref(ci), byref(c) ) )
