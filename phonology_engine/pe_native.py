@@ -118,7 +118,7 @@ def phonology_engine_normalized_text_get_phrase_letter_map(handle, index):
     ci = POINTER(c_int)()
     c = c_int(0)
 
-    _check( PhonologyEngineNormalizedTextGetPhraseLetterMap( handle, c_int(index), byref(ci), byref(c) ) )
+    _check( _PhonologyEngineNormalizedTextGetPhraseLetterMap( handle, c_int(index), byref(ci), byref(c) ) )
 
     return [ci[i] for i in c]
 
