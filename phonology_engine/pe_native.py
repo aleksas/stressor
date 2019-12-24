@@ -120,7 +120,7 @@ def phonology_engine_normalized_text_get_phrase_letter_map(handle, index):
 
     _check( _PhonologyEngineNormalizedTextGetPhraseLetterMap( handle, c_int(index), byref(ci), byref(c) ) )
 
-    return [ci[i] for i in range(c)]
+    return [ci[i] for i in range(c.value)]
 
 def phonology_engine_process_phrase(text):
 
