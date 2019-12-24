@@ -3,8 +3,13 @@ EXPORTS
 	PhonologyEngineInit
 	PhonologyEngineProcessPhrase
 
-	PhonologyEngineOutputFree
+	PhonologyEngineNormalizeText
+	PhonologyEngineNormalizedTextFree
+	PhonologyEngineNormalizedTextGetPhraseCount
+	PhonologyEngineNormalizedTextGetPhrase
+	PhonologyEngineNormalizedTextGetPhraseLetterMap
 
+	PhonologyEngineOutputFree
 	PhonologyEngineOutputGetWordCount
 	PhonologyEngineOutputGetWord
 	PhonologyEngineOutputGetWordSyllables
