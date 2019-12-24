@@ -40,7 +40,9 @@ if ($build) {
 		cd native/source
 
 		make
-		
+
+		cd ../..
+				
 	}
 	
 	python setup.py build
