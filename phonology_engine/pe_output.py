@@ -34,6 +34,7 @@ class PhonologyEngineNormalizedPhrases:
             raise StopIteration
         else:
             value = self.get_phrase(self.current)
+            letter_map = self.get_phrase_letter_map(self.current)
 
             if self.remove_stress_chars:
                 for c in _stress_ascii_chars:
@@ -44,13 +45,16 @@ class PhonologyEngineNormalizedPhrases:
                     value = value.replace(c, '')
 
             self.current += 1
-            return value
+            return value, letter_map
     
     def get_phrase_count(self):
         return pe_native.phonology_engine_normalized_text_get_phrase_count(self.handle)
     
     def get_phrase(self, index):
         return pe_native.phonology_engine_normalized_text_get_phrase(self.handle, index)
+    
+    def get_phrase_letter_map(self, index):
+        return pe_native.phonology_engine_normalized_text_get_phrase_letter_map(self.handle, index)
 
 class PhonologyEngineOutput:
     def __init__(self, handle):
