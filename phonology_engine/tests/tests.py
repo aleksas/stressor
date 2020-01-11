@@ -59,6 +59,11 @@ def test_normalize_and_collapse_text_1():
     res = pe.normalize_and_collapse(u'1 žmogus. Ištikima savo dvasiniam ir doroviniam paveldui Sąjunga remiasi nedalomomis ir visuotinėmis vertybėmis: laba diena. Kur buvai?')
     assert_equal(res, u'VIENAS ŽMOGUS. IŠTIKIMA SAVO DVASINIAM IR DOROVINIAM PAVELDUI SĄJUNGA REMIASI NEDALOMOMIS IR VISUOTINĖMIS VERTYBĖMIS: LABA DIENA. KUR BUVAI?')
 
+def test_normalize_and_collapse_text_2():
+    pe = PhonologyEngine()
+    res = pe.process_and_collapse(u'31 kačiukas perbėgo kelią.', 'ascii_stressed_word')
+    assert_equal(res, u'TRI`SDEŠIMT VI^ENAS KAČIU`KAS PE^RBĖGO KE~LIĄ.')
+
 def test_normalize_and_collapse_abbr_1():
     pe = PhonologyEngine()
     pe.phrase_separators = ''
