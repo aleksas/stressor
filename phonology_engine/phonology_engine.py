@@ -134,12 +134,36 @@ class PhonologyEngine:
         if word_format not in _valid_word_formats:
             raise Exception('Invalide word format "%s". Can be one of: %s.' % (word_format, str(_valid_word_formats)))
 
+        def consolidate_phrase_words(phrase):
+            def update_word_details(word_details, extra_word_details):
+                word_details['span_normalized'] = (
+                    min(word_details['span_normalized'][0], extra_word_details['span_normalized'][0]),
+                    max(word_details['span_normalized'][1], extra_word_details['span_normalized'][1]),
+                )
+
+                for word_format in _valid_word_formats:
+                    if word_format:
+                        word_details[word_format] += ' ' + extra_word_details[word_format]
+
+            last_word_details = None
+            for word_details in phrase:
+                if last_word_details == None:
+                    last_word_details = word_details
+                else:
+                    if word_details['span_source'] == last_word_details['span_source']:
+                        update_word_details(last_word_details, word_details)
+                    else:
+                        yield last_word_details
+                        last_word_details = word_details
+            if last_word_details:
+                yield last_word_details                
+
         res = original_text
         output_reversed = reversed(list(output))
         for element in output_reversed:
             processed_phrase, _, _, _ = element
 
-            for word_details in reversed(processed_phrase):
+            for word_details in reversed(list(consolidate_phrase_words(processed_phrase))):
                 start, end = word_details['span_source']
                 res = res[:start] + word_details[word_format] + res[end:]
         
