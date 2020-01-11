@@ -135,23 +135,20 @@ class PhonologyEngine:
             raise Exception('Invalide word format "%s". Can be one of: %s.' % (word_format, str(_valid_word_formats)))
 
         def consolidate_phrase_words(phrase):
-            def update_word_details(word_details, extra_word_details):
-                word_details['span_normalized'] = (
-                    min(word_details['span_normalized'][0], extra_word_details['span_normalized'][0]),
-                    max(word_details['span_normalized'][1], extra_word_details['span_normalized'][1]),
-                )
-
-                for word_format in _valid_word_formats:
-                    if word_format:
-                        word_details[word_format] += ' ' + extra_word_details[word_format]
-
             last_word_details = None
             for word_details in phrase:
                 if last_word_details == None:
                     last_word_details = word_details
                 else:
                     if word_details['span_source'] == last_word_details['span_source']:
-                        update_word_details(last_word_details, word_details)
+                        last_word_details['span_normalized'] = (
+                            min(last_word_details['span_normalized'][0], word_details['span_normalized'][0]),
+                            max(last_word_details['span_normalized'][1], word_details['span_normalized'][1]),
+                        )
+
+                        for word_format in _valid_word_formats:
+                            if word_format:
+                                last_word_details[word_format] += ' ' + word_details[word_format]
                     else:
                         yield last_word_details
                         last_word_details = word_details
