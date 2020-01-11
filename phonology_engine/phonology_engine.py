@@ -137,15 +137,11 @@ class PhonologyEngine:
         res = original_text
         output_reversed = reversed(list(output))
         for element in output_reversed:
-            if isinstance(element, tuple):
-                processed_phrase, _, _, _ = element
+            processed_phrase, _, _, _ = element
 
-                for word_details in reversed(processed_phrase):
-                    start, end = word_details['span_source']
-                    res = res[:start] + word_details[word_format] + res[end:]
-                    
-            else:
-                res = element + res
+            for word_details in reversed(processed_phrase):
+                start, end = word_details['span_source']
+                res = res[:start] + word_details[word_format] + res[end:]
         
         return res
 
