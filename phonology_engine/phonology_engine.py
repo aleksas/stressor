@@ -35,11 +35,24 @@ class PhonologyEngine:
             raise Exception('Phrase "%s" length exceeds %d char limit' % (phrase, _max_prase_length))
         
         handle = phonology_engine_process_phrase(phrase)
+
+        offset = 0
         
         with PhonologyEngineOutput(handle) as output:
-            res = [
+            res = []
+            for i in range(output.get_word_count()):
+                word = output.get_word(i, include_syllables=False)
+
+                try:
+                    start_index = phrase.index(word, offset)
+                    word_span = start_index, start_index + len(word)
+                    offset = word_span[1]
+                except ValueError:
+                    word_span = None
+
+                res.append(
                     {
-                    'word': output.get_word(i, include_syllables=False),
+                    'word': word,
                     'word_with_syllables': output.get_word(i, include_syllables=True),
                     'number_stressed_word': output.get_word_with_numeric_stress(i, include_syllables=include_syllables),
                     'utf8_stressed_word': output.get_word_with_utf8_stress(i, include_syllables=include_syllables),
@@ -47,34 +60,12 @@ class PhonologyEngine:
                     'word_with_all_numeric_stresses': output.get_word_with_all_numeric_stresses(i, include_syllables=include_syllables),
                     'word_with_only_multiple_numeric_stresses': output.get_word_with_only_multiple_numeric_stresses(i, include_syllables=include_syllables),
                     'syllables': output.get_word_syllables(i),
-                    'stress_options': output.get_word_stress_options(i)
+                    'stress_options': output.get_word_stress_options(i),
+                    'word_span': word_span
                     }
-
-                    for i in range(output.get_word_count())
-                ]
+                )
                                 
             return res
-
-    def _consolidate_normalized_words(self, phrase):
-        last_word_details = None
-        for word_details in phrase:
-            if last_word_details == None:
-                last_word_details = word_details
-            else:
-                if word_details['span_source'] == last_word_details['span_source']:
-                    last_word_details['span_normalized'] = (
-                        min(last_word_details['span_normalized'][0], word_details['span_normalized'][0]),
-                        max(last_word_details['span_normalized'][1], word_details['span_normalized'][1]),
-                    )
-
-                    for word_format in _word_format_symbols.keys():
-                        if word_format:
-                            last_word_details[word_format] += ' ' + word_details[word_format]
-                else:
-                    yield last_word_details
-                    last_word_details = word_details
-        if last_word_details:
-            yield last_word_details
 
     def _process(self, text, separators, normalize=True, include_syllables=True, normalize_only=False):
         p = (r'[^' + re.escape(separators) + r']+') if separators else r'^.*$'
@@ -107,7 +98,6 @@ class PhonologyEngine:
 
     def process_and_collapse(self, s, word_format='word', normalize=True, include_syllables=False):
         processed = self._process(s, separators=self.phrase_separators, normalize=normalize, include_syllables=include_syllables, normalize_only=False)
-        processed = list(processed)
         return self.collapse(s, processed, word_format)
 
     def collapse(self, original_text, output, word_format='word'):
