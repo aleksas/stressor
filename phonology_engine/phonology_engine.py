@@ -30,7 +30,7 @@ class PhonologyEngine:
         self.collapsor = _collapsor
         self.phrase_separators = _phrase_separators
 
-    def _process_phrase(self, phrase, include_syllables):
+    def _process_phrase(self, phrase, include_syllables, phrase_offset):
         if len(phrase) > _max_prase_length:
             raise Exception('Phrase "%s" length exceeds %d char limit' % (phrase, _max_prase_length))
         
@@ -45,8 +45,9 @@ class PhonologyEngine:
 
                 try:
                     start_index = phrase.index(word, offset)
-                    word_span = start_index, start_index + len(word)
-                    offset = word_span[1]
+                    span_end = start_index + len(word)
+                    word_span = phrase_offset + start_index, phrase_offset + span_end
+                    offset = span_end
                 except ValueError:
                     word_span = None
 
@@ -75,6 +76,7 @@ class PhonologyEngine:
 
         for m in pattern.finditer(text):
             phrase = m.group()
+            offset = m.span()[0]
 
             if normalize:
                 handle = phonology_engine_normalize_text(phrase)
@@ -84,10 +86,10 @@ class PhonologyEngine:
                             yield normalized_phrase, phrase, normalized_phrase, letter_map
                     else:
                         for normalized_phrase, letter_map in normalized_phrases:
-                            processed_phrase = self._process_phrase(normalized_phrase, include_syllables)
+                            processed_phrase = self._process_phrase(normalized_phrase, include_syllables, offset)
                             yield processed_phrase, phrase, normalized_phrase, letter_map
             else:
-                processed_phrase = self._process_phrase(phrase, include_syllables)
+                processed_phrase = self._process_phrase(phrase, include_syllables, offset)
                 yield processed_phrase, phrase, phrase, list(range(len(phrase)))
 
     def get_collapse_formats(self):
