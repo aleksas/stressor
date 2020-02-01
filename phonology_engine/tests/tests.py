@@ -82,7 +82,7 @@ def test_normalize_and_collapse_text_5():
 def test_normalize_and_collapse_text_6():
     pe = PhonologyEngine()
     res = pe.process_and_collapse(u'O pirmasis pasaulyje telefonas perlenkiamu ekranu - „Royole FlexPai“ - yra ne prototipinėje fazėje.', 'ascii_stressed_word')
-    assert_equal(res, u'O PIRMA`SIS PASA^ULYJE TELEFO`NAS PE^RLENKIAMU EKRANU` – ROYOLE FLEKSPAI YRA` NE PROTOTIPINĖJE FA~ZĖJE')
+    assert_equal(res, u'O PIRMA`SIS PASA^ULYJE TELEFO`NAS PE^RLENKIAMU EKRANU` ROYOLE FLEKSPAI YRA` NE PROTOTIPINĖJE FA~ZĖJE')
 
 def test_normalize_and_collapse_text_3():
     pe = PhonologyEngine()
@@ -110,3 +110,22 @@ def test_normalize_and_collapse_text_roman_num_1():
     pe.phrase_separators = ''
     res = pe.normalize_and_collapse(u'IV.')
     assert_equal(res, u'KETVIRTAS')
+
+def test_word_span_consistency():
+    pe = PhonologyEngine()
+    t = u'Pradėkime nuo tų pirmųjų. Kinijos bendrovės „Royole“ pavadinimas Lietuvoje yra mažai kam girdėtas - ši įmonės negamina mūsų šalyje populiarių išmaniųjų telefonų. Na, ir telefonai atskirai nėra šio gamintojo arkliukas - jo specializacija yra lankstūs ekranai. Tuos ekranus galite klijuoti kur norite - ant rankinių, ant kepuraičių, ant marškinėlių. Jie ne ką storesni už popieriaus lapą.'
+    liepa_processed_data = pe.process(t)
+    for word_details, a, b, letter_map in liepa_processed_data:
+        for word_detail in word_details:    
+            span = word_detail['word_span']
+            normalized = (len ( set( letter_map[span[0]:span[1]] ) ) == 1) and (span[1] - span[0] > 1)
+            source_span = letter_map[span[0]], letter_map[span[1] - 1] + 1
+            word = word_detail['ascii_stressed_word']
+            orig_word = t[source_span[0]:source_span[1]]
+
+            if not set(orig_word).intersection(set('^`~')):
+                continue
+            
+            orig_word_ = t[max(0, source_span[0] - 2):min(len(t), source_span[1] + 2)]
+
+            assert_equal(orig_word.lower(), word.replace('`', '').replace('^', '').replace('~', '').lower())
