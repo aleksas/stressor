@@ -7,6 +7,7 @@ import re
 
 _phrase_separators = u'.?!;:\r\n,'
 _truncated_chars = u'„“"\''
+_letter_pattern = u'[A-Za-zĄ-Žą-ž]'
 _max_prase_length = 200
 _word_format_symbols = {
     None:'',
@@ -30,7 +31,7 @@ class PhonologyEngine:
         self.collapsor = _collapsor
         self.phrase_separators = _phrase_separators
 
-    def _process_phrase(self, phrase, include_syllables, phrase_offset):
+    def _process_phrase(self, phrase, include_syllables):
         if len(phrase) > _max_prase_length:
             raise Exception('Phrase "%s" length exceeds %d char limit' % (phrase, _max_prase_length))
         
@@ -42,12 +43,13 @@ class PhonologyEngine:
             res = []
             for i in range(output.get_word_count()):
                 word = output.get_word(i, include_syllables=False)
+                if not re.search(_letter_pattern, word):
+                    continue
 
                 try:
                     start_index = phrase.index(word, offset)
-                    span_end = start_index + len(word)
-                    word_span = phrase_offset + start_index, phrase_offset + span_end
-                    offset = span_end
+                    word_span = start_index, start_index + len(word)
+                    offset = word_span[1]
                 except ValueError:
                     word_span = None
 
@@ -83,14 +85,14 @@ class PhonologyEngine:
                 with PhonologyEngineNormalizedPhrases(handle) as normalized_phrases:
                     if normalize_only:
                         for normalized_phrase, letter_map in normalized_phrases:
-                            yield normalized_phrase, phrase, normalized_phrase, letter_map
+                            yield normalized_phrase, phrase, normalized_phrase, [v + offset for v in letter_map]
                     else:
                         for normalized_phrase, letter_map in normalized_phrases:
-                            processed_phrase = self._process_phrase(normalized_phrase, include_syllables, offset)
-                            yield processed_phrase, phrase, normalized_phrase, letter_map
+                            processed_phrase = self._process_phrase(normalized_phrase, include_syllables)
+                            yield processed_phrase, phrase, normalized_phrase, [v + offset for v in letter_map]
             else:
-                processed_phrase = self._process_phrase(phrase, include_syllables, offset)
-                yield processed_phrase, phrase, phrase, list(range(len(phrase)))
+                processed_phrase = self._process_phrase(phrase, include_syllables)
+                yield processed_phrase, phrase, phrase, [v + offset for v in range(len(phrase))]
 
     def get_collapse_formats(self):
         return _word_format_symbols.keys()
