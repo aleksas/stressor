@@ -28,7 +28,7 @@ const char * rules[] = {
     "ReadByLetter:{#$%&*/\\=+}@",
     "ReadByLetter:WordNoVowels@",
     "//",
-    "Replace:aaa@a. aa@",
+    /*"Replace:aaa@a. aa@",
     "Replace:eee@e. ee@",
     "Replace:iii@i. ii@",
     "Replace:ooo@o. oo@",
@@ -75,7 +75,7 @@ const char * rules[] = {
     "Replace:À. ÀÀ@À. À. À@",
     "Replace:¡. ¡¡@¡. ¡. ¡@",
     "Replace:ÿ. ÿÿ@ÿ. ÿ. ÿ@",
-    "Replace:€. €€@€. €. €@",
+    "Replace:€. €€@€. €. €@",*/
     "//",
     "Replace: - @ ñ @",
     "Phrases:@",
