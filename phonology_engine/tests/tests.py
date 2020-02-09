@@ -126,6 +126,14 @@ def test_word_span_consistency():
             if not set(orig_word).intersection(set('^`~')):
                 continue
             
-            orig_word_ = t[max(0, source_span[0] - 2):min(len(t), source_span[1] + 2)]
+            _ = t[max(0, source_span[0] - 2):min(len(t), source_span[1] + 2)]
 
             assert_equal(orig_word.lower(), word.replace('`', '').replace('^', '').replace('~', '').lower())
+
+def test_sentence_split():
+    pe = PhonologyEngine()
+    t = u'Bezdonių'
+    liepa_processed_data = pe.process(t)
+    for word_details, _, _, _ in liepa_processed_data:
+        for _ in word_details:
+            pass

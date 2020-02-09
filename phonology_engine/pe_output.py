@@ -6,19 +6,22 @@ _syllable_chars = '-'
 _numeric_stress_map = {
     0: '0',
     1: '1',
-    2: '2'
+    2: '2',
+    3: '1'
 }
 
 _utf8_stress_map = {
     0: u'\u0300', # grave
     1: u'\u0301', # acute
-    2: u'\u0303'  # tilde
+    2: u'\u0303', # tilde
+    3: u'\u0301', # acute
 }
 
 _ascii_stress_map = {
     0: "`", # grave
     1: "^", # acute - no printable acute accent in ascii table only in extended ASCII:239
-    2: "~"  # tilde
+    2: "~", # tilde
+    3: "^", # acute
 }
 
 _stress_ascii_chars = _ascii_stress_map.values()
